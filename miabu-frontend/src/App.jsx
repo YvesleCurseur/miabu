@@ -2,9 +2,8 @@ import './App.css';
 import React from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
-import Header from './components/Header';
-import SideBar from './components/SideBar';
-import { Discover, YourEvaluations, Signin, Login, EvaluationDetails, Register } from './pages';
+import { Header, SideBar } from './components';
+import { Discover, YourEvaluations, Signin, EvaluationDetails, Register } from './pages';
 
 
 function App() {
@@ -12,10 +11,10 @@ function App() {
   const location = useLocation();
   let Page;
 
-  if (location.pathname === "/register" | location.pathname === "/signin") {
+  if (location.pathname === "/register" | location.pathname === "/sign-in") {
     Page = 
     <Routes>
-      <Route path="/signin" element={<Signin />} />
+      <Route path="/sign-in" element={<Signin />} />
       <Route path="/register" element={<Register />} />
     </Routes>
   } else {

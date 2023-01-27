@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { CiSearch } from 'react-icons/ci';
 import { BellIcon } from '@heroicons/react/24/outline'
 // import { useOnClickOutside } from 'react-use';
+import { Link } from 'react-router-dom';
 
 function Header() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -51,14 +52,16 @@ function Header() {
 
         
         {/* Title */}
-        <div className='flex'>
-          <div>
-            <img src="./logo.png" alt="Miabu Susu" className='block pr-2 h-8 w-auto' />
+        <Link to="/">
+          <div className='flex'>
+            <div>
+              <img src="./logo.png" alt="Miabu Susu" className='block pr-2 h-8 w-auto' />
+            </div>
+            <div>
+              <h1 className="text-lg flex">Miabu<p className='font-bold text-lg'>Susu</p></h1>
+            </div>
           </div>
-          <div>
-            <h1 className="text-lg flex">Miabu<p className='font-bold text-lg'>Susu</p></h1>
-          </div>
-        </div>
+        </Link>
 
         
         {/* Search Bar */}
@@ -90,13 +93,17 @@ function Header() {
           <div className='flex space-x-5'>
             <div>
               <button type="submit" className='w-full px-4 py-2 text-white bg-rose-600 hover:bg-rose-700'>
-                Inscription
+                <Link to="/register">
+                  Inscription
+                </Link>
               </button>                                                      
             </div>
 
             <div>
               <button type="submit" className='w-full px-4 py-2 text-blue-500 bg-gray-200 hover:bg-gray-300'>
-                Connexion
+                <Link to="/sign-in">
+                  Connexion
+                </Link>
               </button>    
             </div>
           </div>
