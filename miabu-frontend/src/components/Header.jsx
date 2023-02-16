@@ -27,7 +27,6 @@ function Header() {
 
     document.addEventListener('click', handleClick);
 
-
     return () => {
       document.removeEventListener('click', handleClick);
     };
@@ -46,11 +45,10 @@ function Header() {
 
   return (
     <div>
-    <header>
-      
-      <div className="relative bg-white text-black p-4 flex justify-between items-center">
+      {/* <!-- Navbar --> */}
+      <nav className="min-h-[4rem] sticky top-0 z-10 col-[1/-1] row-[1] flex justify-center items-center bg-indigo-600 text-white">
 
-        
+      <div className="fixed top-0 left-0 right-0 bg-white text-black p-4 flex justify-between items-center">
         {/* Title */}
         <Link to="/">
           <div className='flex'>
@@ -82,7 +80,7 @@ function Header() {
           </div>
 
           <div>
-            <button type="submit" className='w-full px-4 py-2 text-white bg-rose-600 hover:bg-rose-700'>
+            <button type="submit" className='text-sm w-full px-4 py-2 text-white bg-rose-600 hover:bg-rose-700'>
                 Posez une question
             </button> 
           </div>  
@@ -92,7 +90,7 @@ function Header() {
           {/* Buttons For Connexion */}
           <div className='flex space-x-5'>
             <div>
-              <button type="submit" className='w-full px-4 py-2 text-white bg-rose-600 hover:bg-rose-700'>
+              <button type="submit" className='text-sm w-full px-4 py-2 text-white bg-rose-600 hover:bg-rose-700'>
                 <Link to="/register">
                   Inscription
                 </Link>
@@ -100,7 +98,7 @@ function Header() {
             </div>
 
             <div>
-              <button type="submit" className='w-full px-4 py-2 text-blue-500 bg-gray-200 hover:bg-gray-300'>
+              <button type="submit" className='text-sm w-full px-4 py-2 text-blue-500 bg-gray-200 hover:bg-gray-300'>
                 <Link to="/sign-in">
                   Connexion
                 </Link>
@@ -132,8 +130,8 @@ function Header() {
             </div> */}
         </div>
       <hr className="border-t-1 border-gray-300" />
-    </header>
 
+        </nav>
 </div>
 
     
