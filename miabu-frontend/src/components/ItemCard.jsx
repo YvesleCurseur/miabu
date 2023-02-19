@@ -2,8 +2,6 @@ import React from 'react'
 
 const ItemCard = ({ item }) => {
 
-  console.log(item)
-
   return (
     <div className='p-5 m-5 bg-white border-solid'>
       {/* Profil section */}

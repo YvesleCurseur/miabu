@@ -34,16 +34,8 @@ function App() {
 
   return (
     <div>
-      <div className="fixed top-0 left-0 h-full w-1/2" aria-hidden="true">
-
-      </div>
-      <div className="fixed top-0 right-0 h-full w-1/2" aria-hidden="true">
-
-      </div>
-      <div className="relative grid grid-cols-[2rem_1fr_2rem] xl:grid-cols-[minmax(2rem,1fr)_16rem_minmax(200px,calc(80rem-32rem))_16rem_minmax(2rem,1fr)] lg:grid-cols-[2rem_minmax(200px,calc(100%-16rem))_16rem_2rem] min-h-screen">
         <TopBar />
         {AuthPage}
-      </div>
     </div>
   );
 }
