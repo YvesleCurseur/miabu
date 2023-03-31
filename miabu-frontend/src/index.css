@@ -7,4 +7,6 @@
 body {
   margin: 0;
   font-family: 'Open Sans', sans-serif;
+  --tw-bg-opacity: 1;
+  background-color: rgb(248 250 252 / var(--tw-bg-opacity));
 } 

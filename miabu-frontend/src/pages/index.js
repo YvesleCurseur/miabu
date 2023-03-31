@@ -3,8 +3,9 @@ import Signin from "./Signin";
 import RelatedElements from "./RelatedElements";
 import Register from "./Register";
 import YourVotes from "./YourVotes";
-import EvaluationDetails from "./EvaluationDetails";
-import YourEvaluations from "./YourEvaluations";
+import EvaluationDetails from "./ItemDetails";
+import YourEvaluations from "./YourItems";
+import CreateItem from "./CreateItem";
 
 export {
     Discover,
@@ -13,5 +14,6 @@ export {
     RelatedElements,
     EvaluationDetails,
     YourVotes,
-    YourEvaluations
+    YourEvaluations,
+    CreateItem
 }

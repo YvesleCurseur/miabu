@@ -4,8 +4,8 @@ import Footer from './Footer'
 
 const LeftBar = () => {
   return (
-    <aside id="default-sidebar" className="fixed w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
-      <div class="h-full px-3 py-4 overflow-y-auto bg-white">
+    <aside className="fixed w-64 h-screen sm:hidden">
+      <div className="h-full px-3 py-4 overflow-y-auto bg-white">
         <div className='flex items-center justify-start h-4/5'>
           <div className='list-none m-auto'>
           <div className='px-2 mt-5'>
