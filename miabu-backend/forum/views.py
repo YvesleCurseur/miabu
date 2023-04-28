@@ -1,18 +1,15 @@
-from email import message
-from msilib.schema import Class
-from pickle import TRUE
 from rest_framework import viewsets, generics
 from rest_framework import permissions
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, DjangoModelPermissions, BasePermission, IsAdminUser, DjangoModelPermissionsOrAnonReadOnly
 from drf_yasg.utils import swagger_auto_schema
 from django.contrib.auth.models import User, Group
-from forum.serializers import UserSerializer, GroupSerializer, QuestionSerializer, AnswerSerializer
-from forum.models import Question, Answer
+from forum.serializers import UserSerializer, GroupSerializer, TopicSerializer, AnswerSerializer
+from forum.models import Topic, Answer
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import filters
 
-class QuestionUserWritePermission(BasePermission):
+class TopicUserWritePermission(BasePermission):
     message = 'Editing post is restricted to the author only.'
 
     def has_object_permission(self, request, view, obj):
@@ -20,35 +17,35 @@ class QuestionUserWritePermission(BasePermission):
             return True
         return obj.author == request.user
 
-# Posez une question
-class CreateQuestionView(generics.CreateAPIView):
+# Posez une topic
+class CreateTopicView(generics.CreateAPIView):
     """
-        Add a question
+        Add a Topic
         Want: 'title', 'content', 'author', 'status'
     """
-    serializer_class = QuestionSerializer
+    serializer_class = TopicSerializer
     pass
 
-# Détail d'une question
-class ReadQuestionView(generics.RetrieveAPIView):
+# Détail d'une Topic
+class ReadTopicView(generics.RetrieveAPIView):
     """
-        Get a specific question
+        Get a specific Topic
         Return: 'id', 'title', 'content', 'slug', 'create_at', 'author', 'status'
     """
     # permission_classes = [DjangoModelPermissions]
     # permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
-    queryset = Question.question_objects.all()
-    serializer_class = QuestionSerializer
+    queryset = Topic.topic_objects.all()
+    serializer_class = TopicSerializer
 
     # def get_queryset(self):
     #     id = self.request.query_params.get('pk', None)
     #     print(id)
-    #     return Question.objects.filter(id=id)
+    #     return Topic.objects.filter(id=id)
 
-class QuestionListDetailFilter(generics.ListAPIView):
+class TopicListDetailFilter(generics.ListAPIView):
 
-    queryset = Question.objects.all()
-    serializer_class = QuestionSerializer
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['$slug']
 
@@ -59,47 +56,47 @@ class QuestionListDetailFilter(generics.ListAPIView):
 
 
 
-# Modifier une question
-class UpdateQuestionView(generics.UpdateAPIView, QuestionUserWritePermission):
+# Modifier une Topic
+class UpdateTopicView(generics.UpdateAPIView, TopicUserWritePermission):
     """
-        Update a specific question
+        Update a specific Topic
         Return: 'id', 'title', 'content', 'create_at', 'author', 'status'
     """
-    permission_classes = [QuestionUserWritePermission]
-    queryset = Question.question_objects.all()
-    serializer_class = QuestionSerializer
+    permission_classes = [TopicUserWritePermission]
+    queryset = Topic.topic_objects.all()
+    serializer_class = TopicSerializer
 
 
-# Détail d'une question
-class DeleteQuestionView(generics.DestroyAPIView, QuestionUserWritePermission):
+# Détail d'une Topic
+class DeleteTopicView(generics.DestroyAPIView, TopicUserWritePermission):
     """
-        Get a specific question
+        Get a specific Topic
         Return: 'id', 'title', 'content', 'create_at', 'author', 'status'
     """
-    permission_classes = [QuestionUserWritePermission]
-    queryset = Question.question_objects.all()
-    serializer_class = QuestionSerializer
+    permission_classes = [TopicUserWritePermission]
+    queryset = Topic.topic_objects.all()
+    serializer_class = TopicSerializer
 
 
-# Afficher la liste des questions
-class ListQuestionView(generics.ListAPIView):
+# Afficher la liste des Topics
+class ListTopicView(generics.ListAPIView):
     """
-        Get list of questions
+        Get list of Topics
         Return: 'id', 'title', 'content', 'create_at', 'author', 'status'
     """
     
-    # Le question_object va retourner toutes les questions publiées
+    # Le Topic_object va retourner toutes les Topics publiées
     permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
-    serializer_class = QuestionSerializer
+    serializer_class = TopicSerializer
 
-    # Récupérer les question en se basant sur le user
+    # Récupérer les Topic en se basant sur le user
     def get_queryset(self):
         user = None
         if user is not None:
             user = self.request.user.id
-            return Question.objects.filter(author=user)
+            return Topic.objects.filter(author=user)
         else:
-            return Question.objects.all()
+            return Topic.objects.all()
 
 # Donner une Reponse
 class CreateAnswerView(generics.CreateAPIView):

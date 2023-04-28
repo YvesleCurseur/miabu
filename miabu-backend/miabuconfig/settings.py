@@ -32,7 +32,9 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'rest_framework_simplejwt',
     'drf_yasg',
+    'assessment',
     'forum', 
+    'ressource',
     'user',
     'corsheaders'
 ]

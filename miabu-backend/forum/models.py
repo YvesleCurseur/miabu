@@ -1,88 +1,67 @@
+# You are now back to your project
+# Make sure you have all you need to start the project
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from django.utils.text import slugify
+from ressource.models import Media
 
+# Files (Evaluation, Topic, Category, Etablishment)
 class Category(models.Model):
     """
-        Category model
+        Category of the question
     """
-
-    # Nom de la categorie
     name = models.CharField(max_length=100)
-
-    # Une description de la categorie qui peut être vide dû le "blank=true"
     description = models.CharField(max_length=100, blank=True)
+    create_at = models.DateTimeField(default=timezone.now)
+    update_at = models.DateTimeField(auto_now=True)
 
-    # Retourne le nom par défaut (admin)
+    # Return the name of the category by default
     def __str__(self):
         return self.name
 
-class Question(models.Model):
+class Topic(models.Model):
     """
-        User create a question
+        Topic model
     """
-
-    # Un custom manager(Model) qui permet de ne récupérer que les Questions publiés
-    class QuestionObjects(models.Manager):
+    # A custom manager(Model) to retrieve only published questions
+    class TopicObjects(models.Manager):
         def get_queryset(self):
             return super().get_queryset() .filter(status='publish')
 
-    # Brouillon et Publié pour la Question
+    # Draft or publish 
     OPTIONS = (
         ('draft', 'Draft'),
         ('publish', 'Publish'),
     )
 
-    # Titre de la question (a une limite)
     title = models.CharField(max_length=150)
-
-    # Contenu de la question, qui devrait recevoir tout type de documentà à voir si je suis obligé d'utiliser FrolaEditorField
+    # Content of the topic, which should receive text
     content = models.TextField()
-
-    # Slug dans l'url qui doit être au format https://domain.com/questions/30394225/slug
+    # Slug in the url which must be in the format https://domain.com/topics/30394225/slug
     slug = models.SlugField(max_length=1000, unique_for_date='publish')
-
-    # Contenir les images
-    images = models.ImageField(blank=True)
-
-    # Quand la question est publié
-    publish = models.DateTimeField(default=timezone.now)
-
-    # Création récupérée pour affichage
+    publish_at = models.DateTimeField(default=timezone.now)
+    # Create date of the topic
     create_at = models.DateTimeField(default=timezone.now)
-
-    # Dernière modification de la part de l'utilisateur
+    # Last update date of the topic
     last_update_at = models.DateTimeField(default=timezone.now)
-
-    # Suppression
-    delete_at = models.DateTimeField(default=timezone.now)
-
-    # Catégorie relation pls à pls et peut être null
-    category = models.ManyToManyField(Category, blank=True)
-
-    # Auteur de la réponse je le met à SET_DEFAULT on delete pour toujours avoir l'auteur de la question
+    # Date of deletion of the topic
+    delete_at = models.DateTimeField(null=True, blank=True)
+    # Specifically, each record in the current model can be linked to a record in the Category model, 
+    # but each record in the Category model can be linked to multiple records in the current model. 
+    # That's why it's called a "one-to-many" relationship.
+    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True)
+    # Author of the answer I set it to SET_DEFAULT on delete to always have the author of the topic
     author = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='forum_questions')
-
-    # Pour voir si la question est en brouillon ou non
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='forum_topics')
+    # To know if the topic is published or not
     status = models.CharField(max_length=10, choices=OPTIONS, default='publish')
-
-    # default manager
+    media = models.ManyToManyField(Media, blank=True)
+    # Default manager
     objects = models.Manager()  
+    # Custom manager
+    topic_objects = TopicObjects()  
 
-    # custom manager
-    question_objects = QuestionObjects()  
-
-    # # Champs à réutiliser plus tard
-
-    # # Ce message a été indexé par le moteur de recherche
-    # indexed = models.BooleanField(default=False)
-
-    # # Indique la valeur d'information de la publication
-    # rank = models.FloatField(default=0, blank=True)
-
-    # Retourne le titre par défaut (admin)
     def __str__(self):
         return self.title
 
@@ -93,83 +72,58 @@ class Question(models.Model):
         """
         return self.likes.count()
     
-    # Réogranisé par le dernier publié
+    # Order bythe last publish
     class Meta:
-        ordering = ['-publish']
+        ordering = ['-publish_at']
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
-        super(Question, self).save(*args, **kwargs)
+        super(Topic, self).save(*args, **kwargs)
+
+    def delete(self):
+        self.delete_at = timezone.now()
+        self.save()
 
 class Answer(models.Model):
     """
         User create an answer
+        All the answers are linked to a question
     """
-
-    # Contenu de la question, qui devrait recevoir tout type de documentà à voir si je suis obligé d'utiliser FrolaEditorField
     content = models.TextField()
-
-    # Contenir les images
-    images = models.ImageField()
-
-    # Création récupérée pour affichage
+    media = models.ManyToManyField(Media, blank=True)
     create_at = models.DateTimeField(default=timezone.now)
-
-    # Dernière modification de la part de l'utilisateur
     last_update_at = models.DateTimeField(default=timezone.now)
-
-    # Suppression
     delete_at = models.DateTimeField(default=timezone.now)
-
-    # Auteur de la réponse je le met à SET_DEFAULT on delete pour toujours avoir l'auteur de la question
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='forum_answers')
-
-    # Pour s'assurer que quelqu'un qui répond ne puisse voté
+    # To make sure that someone who answers cannot vote
     is_replied = models.BooleanField(default=True)
-
-    # Quand on supprime une question les réponses partent
-    question = models.ForeignKey(
-        Question,
-        on_delete=models.CASCADE
-    )
-
-    # propriété qui retournes le nombres de votes
+    # If we delete a question the answers go away
+    question = models.ForeignKey(Topic, on_delete=models.CASCADE)
     @property
     def number_of_votes(self):
         """
             Return the number of vote for a answer
         """
         return self.votes.count()
+    
+    def delete(self):
+        self.delete_at = timezone.now()
+        self.save()
 
 class Comment(models.Model):
     """
         User create an comment
     """
-
-    # Contenu de la question, qui devrait recevoir tout type de documentà à voir si je suis obligé d'utiliser FrolaEditorField
     content = models.TextField()
-
-    # Contenir les images
-    images = models.ImageField()
-
-    # Création récupérée pour affichage
+    media = models.ManyToManyField(Media, blank=True)
     create_at = models.DateTimeField(default=timezone.now)
-
-    # Dernière modification de la part de l'utilisateur
     last_update_at = models.DateTimeField(default=timezone.now)
-
-    # Suppression
     delete_at = models.DateTimeField(default=timezone.now)
-
-    # Auteur de la réponse je le met à SET_DEFAULT on deleete pour toujours avoir l'auteur de la question
+    # Author of the comment put SET_DEFAULT on delete to always have the author of the question
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='forum_comments')
-
-    # Pour s'assurer que quelqu'un qui répond ne puisse voté
     is_replied = models.BooleanField(default=True)
-
-    # Quand on supprime une réponse les commentaires partent
     anwser = models.ForeignKey(
         Answer,
         on_delete=models.CASCADE
@@ -177,19 +131,14 @@ class Comment(models.Model):
 
 class Visit(models.Model):
     """ 
-    User visits
+        User visits
     """
-
-    # Auteur de la visite
+    # author of the visit
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-
-    # Addresse ip de l'utilisateur
+    # Ip address of the user
     ip_address = models.CharField(max_length=250)
-
-    # Date de visite de l'utilisateur
     visit_at = models.DateTimeField(default=timezone.now)
-
-    # Réogranisé par le dernier visité
+    question = models.ForeignKey(Topic, on_delete=models.CASCADE)
     class Meta:
         ordering = ['-visit_at']
 
@@ -230,8 +179,8 @@ class Share(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     # Quand on supprime une question les partagent ne fonctionnent plus
-    question = models.ForeignKey(
-        Question,
+    topic = models.ForeignKey(
+        Topic,
         on_delete=models.CASCADE
     )
 
@@ -240,3 +189,5 @@ class Share(models.Model):
 
     def __str__(self):
         return self.question.title
+    
+

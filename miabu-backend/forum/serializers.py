@@ -1,10 +1,10 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User, Group
-from forum.models import Answer, Question
+from forum.models import Answer, Topic, Comment
 
-class QuestionSerializer(serializers.ModelSerializer):
+class TopicSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Question
+        model = Topic
         fields = ['id', 'title', 'content', 'slug', 'author', 'status']
 
 
@@ -15,7 +15,7 @@ class AnswerSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Question
+        model = Topic
         fields = ['id', 'title', 'content', 'create_at', 'author', 'status']
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
