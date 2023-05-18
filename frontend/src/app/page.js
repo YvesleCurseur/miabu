@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Sidebar from '@/components/Sidebar';
 import { useEffect, useState } from 'react'
+import Feed from '@/components/Feed';
 
 export default function Home() {
 
@@ -19,7 +20,12 @@ export default function Home() {
   return (
     <div className='flex'>
       <Sidebar />
-      <h1 className='text-[250px] font-bold'>{message}</h1>
+      {/* {message ?
+        <h1 className='text-[250px] font-bold'>{message}</h1>
+        : 
+        <h1 className='text-[250px] font-bold'>Loading...</h1>
+      } */}
+      <Feed />
     </div> 
   )
 }
