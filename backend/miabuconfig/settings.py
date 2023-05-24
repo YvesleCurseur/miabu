@@ -211,7 +211,7 @@ ACCOUNT_USERNAME_REQUIRED = True
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
-    'allauth.socialaccount.auth_backends.SocialAccountBackend',
+    # 'allauth.socialaccount.auth_backends.SocialAccountBackend',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
