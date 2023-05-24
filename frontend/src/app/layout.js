@@ -1,6 +1,11 @@
+"use client";
+
 import '@/styles/globals.css'
 import Navbar from '@/components/Navbar'
-import Provider from '@/components/Provider'
+import ProviderSession from '@/components/ProviderSession'
+
+import { Provider } from 'react-redux'
+import store from './store'
 
 export const metadata = {
   title: 'Miabu SUSU',
@@ -9,19 +14,21 @@ export const metadata = {
 
 const Rootlayout = ({ children }) => {
   return (
-    <html lang="en">
-      <body>
-        <Provider>
-          <main className='app'>
-            <Navbar />
-          </main>
-          
-          <main className='main'>
-            {children}
-          </main>
-        </Provider>
-      </body>
-    </html>
+      <Provider store={store}>
+        <html lang="en">
+          <body>    
+            <ProviderSession>
+              <main className='app'>
+                <Navbar />
+              </main>
+              
+              <main className='main'>
+                {children}
+              </main>
+            </ProviderSession>
+          </body>
+        </html>
+      </Provider>
   )
 }
 

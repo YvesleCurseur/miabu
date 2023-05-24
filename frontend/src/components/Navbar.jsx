@@ -6,24 +6,25 @@ import { useEffect, useState } from 'react'
 import { getProviders, signIn, signOut, useSession } from "next-auth/react"
 import { useRouter } from 'next/navigation';
 
+import { useSelector, useDispatch } from "react-redux";
+import Cookies from 'js-cookie';
+
 const Navbar = () => {
 
     const router = useRouter();
     // For the authentication 
     const { data: session } = useSession();
-    const [loading, setLoading] = useState(false)
-    const [userData, setUserData] = useState("");
-    const [userLogged, setUserLogged] = useState("");
+    const [loading, setLoading] = useState(false);
 
+    // For the authentication User
+    const dispatch = useDispatch();
+    const userInfos = useSelector((state) => state.user);
+    const [userSessionID, setUserSessionID] = useState(0);
 
     useEffect(() => {
-        const userStorage = JSON.parse(localStorage.getItem("userMiabu"))
-        if (userStorage) {
-            setUserData(userStorage)
-            console.log(userStorage)
-            setUserLogged(userStorage.user.id)
+        if (userInfos?.id !== 0) {
+            setUserSessionID(userInfos.id)
         }
-        
     }, [])
 
     const handleSignOut = async () => {
@@ -36,9 +37,12 @@ const Navbar = () => {
 
     const handleLogout = async () => {
         setLoading(true)
-        localStorage.removeItem('userMiabu');
-        if (window.location.pathname !== '/') window.location.reload()
-        router.push('/')
+        Cookies.remove('id');
+        Cookies.remove('email');
+        Cookies.remove('firstName');
+        Cookies.remove('accessToken');
+        Cookies.remove('refreshToken');
+        dispatch(clearUser());
         setLoading(false)
     }
 
@@ -73,7 +77,7 @@ const Navbar = () => {
                     )}
                 </Link>
                 </div>
-            ) : userLogged ? (
+            ) : userSessionID ? (
                 <div className="flex gap-3 md:gap-5">
                 <Link href="/create-prompt" className="black_btn">
                     Posez une question
@@ -82,18 +86,16 @@ const Navbar = () => {
                     Déconnexion
                 </button>
                 <Link href="/profile">
-                    <p className="font-bold text-white black_btn">{userData?.user.first_name.substr(0, 2).toUpperCase()}</p>
+                    <div>
+                        <p className="font-bold text-white black_btn">{userInfos?.firstName.substr(0, 2).toUpperCase()}</p>
+                    </div>
                 </Link>
                 </div>
             ) : (
                 <>
-                {loading ? (
-                    <p>Loading...</p>
-                ) : (
                     <Link href="/login">
                     <button type="button">Connexion</button>
                     </Link>
-                )}
                 </>
             )}
         </div>

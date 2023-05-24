@@ -7,6 +7,10 @@ import { useRouter } from 'next/navigation';
 
 import { signInUser } from '../api/user/route';
 
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from '@/features/user/userSlice';
+import Cookies from 'js-cookie';
+
 import GoogleSvg from '../../../public/icons/GoogleSvg';
 import FacebookSvg from '../../../public/icons/FacebookSvg';
 
@@ -15,8 +19,12 @@ const Login = () => {
     const { data: session } = useSession();
     const [providers, setProviders] = useState(null);
     // Auth simple
+    const dispatch = useDispatch();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const userInfos = useSelector((state) => state.user);
+  
+    console.log(userInfos)
 
     const [loading, setLoading] = useState(false);
 
@@ -39,7 +47,23 @@ const Login = () => {
         try {
             await signInUser(email, password).then(
               (response) => {
-                console.log(response)
+                setLoading(true);
+                //Use cookies forpersistent storage
+                Cookies.set('id', response.user.id);
+                Cookies.set('email', response.user.email);
+                Cookies.set('firstName', response.user.first_name);
+                Cookies.set('accessToken', response.access_token);
+                Cookies.set('refreshToken', response.refresh_token);
+                const userCallback = {
+                  id: response.user.id,
+                  email: response.user.email,
+                  firstName: response.user.first_name,
+                  accessToken: response.access_token,
+                  refreshToken: response.refresh_token,
+                }
+                dispatch(setUser(userCallback));
+                console.log(userInfos)
+                setLoading(false);
                 router.push('/')
               },
               (error) => {
@@ -51,7 +75,7 @@ const Login = () => {
         }
     }
 
-    if (session) router.push('/')
+    if (session || userInfos) router.push('/')
 
     return (
         <div className="flex justify-center items-center h-screen">

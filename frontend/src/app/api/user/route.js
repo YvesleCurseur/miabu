@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_LIST_USER, LOGIN } from "..";
+import { GET_LIST_USER, LOGIN, REGISTER } from "..";
 // Make a get request to the API
 
 function getListUser() {
@@ -23,12 +23,22 @@ function signInUser (email, password){
 		password,
 	})
 	.then((response) => {
-		if (response.data) {
-			console.log(response)
-			localStorage.setItem("userMiabu", JSON.stringify(response.data));
-		}
-		return response.data;
+		return response.data
+	})
+	.catch((error) => {
+		console.error(error)
 	});
 };
 
-export { getListUser, signInUser };
+function signUpUser(userSubmission){
+	return axios
+	.post(REGISTER, userSubmission)
+	.then((response) => {
+		return response.data
+	})
+	.catch((error) => {
+		console.error(error)
+	});
+};
+
+export { getListUser, signInUser, signUpUser };
