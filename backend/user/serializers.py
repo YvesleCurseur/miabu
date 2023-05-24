@@ -29,8 +29,13 @@ class CustomUserSerializer(serializers.ModelSerializer):
         
         if password is not None:
             instance.set_password(password)
-        
-        instance.is_social_network = True
+
+        if instance.is_social_network is True:
+            instance.is_social_network = True
+        else :
+            instance.is_social_network = False
+
+        print(created)
         
         try:
             instance.save()
