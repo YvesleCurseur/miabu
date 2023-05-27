@@ -18,13 +18,16 @@ export default function Home() {
   
   return (
     <div className='flex'>
-      <Sidebar />
-      {message ?
-        <h1 className='text-[250px] font-bold'>{message}</h1>
-        : 
-        <h1 className='text-[250px] font-bold'>Loading...</h1>
-      }
-      <Feed />
+      {/* <Sidebar /> */}
+      <section className="w-full flex-center flex-col">
+        <h1 className="head_text text-center">
+          Partager vos épreuves.
+          <br className="max-md:hidden"/>
+          {/* <span className="orange_gradient">AI</span> */}
+        </h1>
+        <p className="desc text-center">Vous avez la possibilié de partager et de télécharger vos épreuves</p>
+        <Feed />
+      </section>
     </div> 
   )
 }

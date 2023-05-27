@@ -75,17 +75,17 @@ const Login = () => {
         }
     }
 
-    if (session || userInfos) router.push('/')
+    if (session) router.push('/')
 
     return (
-        <div className="flex justify-center items-center h-screen">
+        <div className="flex justify-center items-center mt-20">
             <div className="max-w-md w-full px-6 py-8">
                 <h2 className="mt-6 text-3xl font-extrabold text-gray-900">Rejoignez la Communauté MibuSusu</h2>
-                {/* <p className="mt-2 text-sm text-gray-600">
-                  Obtenez plus de fonctionnalités et de privilèges en vous inscrivant
-                </p> */}
+                <p className="mt-2 text-sm text-gray-600">
+                  En vous inscrivant avec votre compte Google ou Facebook
+                </p>
               
-                <form className="mt-8 space-y-6">
+                {/* <form className="mt-8 space-y-6">
                 <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                     Adresse Email
@@ -135,7 +135,7 @@ const Login = () => {
                     </a>
                     </div> 
                 </div>
-                */}
+
 
                 <div>
                     <button
@@ -145,7 +145,7 @@ const Login = () => {
                         Connecter
                     </button>     
                 </div>
-                </form>
+                </form> */}
       
                 {/* Providers */}
                 {providers && Object.values(providers).map((provider) => (

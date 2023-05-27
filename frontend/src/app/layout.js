@@ -22,7 +22,7 @@ const Rootlayout = ({ children }) => {
                 <Navbar />
               </main>
               
-              <main className='main'>
+              <main className='app'>
                 {children}
               </main>
             </ProviderSession>

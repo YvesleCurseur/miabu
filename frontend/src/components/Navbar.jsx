@@ -7,6 +7,7 @@ import { getProviders, signIn, signOut, useSession } from "next-auth/react"
 import { useRouter } from 'next/navigation';
 
 import { useSelector, useDispatch } from "react-redux";
+import { clearUser } from '@/features/user/userSlice';
 import Cookies from 'js-cookie';
 
 const Navbar = () => {
