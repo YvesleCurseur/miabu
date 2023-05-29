@@ -1,0 +1,29 @@
+{
+  "name": "miabu-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.9.5",
+    "autoprefixer": "10.4.14",
+    "axios": "^1.4.0",
+    "bcrypt": "^5.1.0",
+    "js-cookie": "^3.0.5",
+    "next": "13.4.2",
+    "next-auth": "^4.22.1",
+    "postcss": "8.4.23",
+    "quill-table-ui": "^1.0.7",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-quill": "^2.0.0",
+    "react-redux": "^8.0.5",
+    "supports-color": "^8.1.1",
+    "tailwindcss": "3.3.2",
+    "tesseract.js": "^4.0.6"
+  }
+}
