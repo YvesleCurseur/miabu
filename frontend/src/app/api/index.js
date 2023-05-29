@@ -1,4 +1,4 @@
-export const URL = "https://miabususu.pythonanywhere.com/"
+export const URL = "https://miabususu.pythonanywhere.com/" || "http://localhost:8000/"
 
 // Hello World
 export const HELLO_WORLD = URL + "v1/hello-world/"
