@@ -27,6 +27,7 @@ export default function Home() {
         </h1>
         <p className="desc text-center">Vous avez la possibilié de partager et de télécharger vos épreuves</p>
         {/* <Feed /> */}
+        <p className="desc text-center text-9xl">{message}</p>
       </section>
     </div> 
   )
