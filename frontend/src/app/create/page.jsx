@@ -17,14 +17,6 @@ const CreateTopic = () => {
         tag: "",
     });
 
-    useEffect(() => {
-          
-      if (typeof window === "undefined") {
-        return;
-      }
-
-    }, []);
-
     // const createPrompt = async (e) => {
     //   // prevent reloading
     //   e.preventDefault();

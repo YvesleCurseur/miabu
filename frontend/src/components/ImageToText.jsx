@@ -8,7 +8,6 @@ import EditorToolbar, { modules, formats } from "./EditorToolbar";
 import "react-quill/dist/quill.snow.css";
 // import "./TextEditor.css";
 
-
 /* 
 Fonctionnalité
 - On ne peut que retranscrire une image à la fois 
@@ -22,6 +21,7 @@ const ImageToText = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [textResult, setTextResult] = useState("");
+  const [imagePath, setImagePath] = useState("");
 
   /* Ajout d'image */
   const handleFileChange = (e) => {
@@ -78,19 +78,21 @@ const ImageToText = () => {
   /* Image to text */
   const getTextFromImage = async () => {
 
-    const imagesContainer = document.getElementById('imagePrint');
-    if (!imagesContainer) {
-        setError("Aucune image à transcrire");
-        return;
+    if (files.length === 0) {
+      setError("Aucune image à transcrire");
+      return;
     }
+
     setIsLoading(true)
+
+    const file = files[0];
+
     const worker = await createWorker()
     await worker.load()
     await worker.loadLanguage('eng')
     await worker.initialize('eng')
 
-    const { data: { text } } = await worker.recognize(imagesContainer.src);
-    console.log(text)
+    const { data: { text } } = await worker.recognize(file);
 
     setTextResult(text)
     setIsLoading(false)
@@ -112,7 +114,7 @@ const ImageToText = () => {
         <input
           type="file"
           id="inputImage"
-          accept="image/jpeg, image/png, image/gif, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          accept="image/jpeg, image/png, image/gif, application/pdf, application/msword"
           multiple
           className="hidden"
           onChange={handleFileChange}
@@ -167,17 +169,6 @@ const ImageToText = () => {
                 >
                   <span className="text-4xl text-gray-400">
                     <i className="far fa-file-pdf"></i>
-                  </span>
-                </div>
-                <p className="text-sm truncate">{file.name}</p>
-              </div>
-            ) : file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ? (
-              <div>
-                <div 
-                  className="w-32 h-32 bg-gray-200 rounded-md flex items-center justify-center"
-                >
-                  <span className="text-4xl text-gray-400">
-                    <i className="far fa-file-word"></i>
                   </span>
                 </div>
                 <p className="text-sm truncate">{file.name}</p>
