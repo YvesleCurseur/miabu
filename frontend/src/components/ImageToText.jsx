@@ -3,18 +3,34 @@
 import { useState, useEffect } from "react";
 import { createWorker }  from 'tesseract.js'
 
-import ReactQuill from "react-quill";
-import EditorToolbar, { modules, formats } from "./EditorToolbar";
+import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
-// import "./TextEditor.css";
 
-/* 
-Fonctionnalité
-- On ne peut que retranscrire une image à la fois 
-- Poster une épreuve vous pouvez mettre le recto et le verso
-- Permettre l'insertion d'image dans le textarea
-- Poster une question une seule image
-*/
+const ReactQuill = dynamic(() => import("react-quill"), { 
+  ssr: false,
+  loading: () => <p>Chargement ...</p>,
+});
+
+const modules = {
+  toolbar: [
+    [{ header: '1' }, { header: '2' }, { header: '3' }, { font: [] }],
+    [{ size: [] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [
+      { list: 'ordered' },
+      { list: 'bullet' },
+      { indent: '-1' },
+      { indent: '+1' },
+    ],
+    ['link', 'image', 'video'],
+    ['clean'],
+  ],
+  clipboard: {
+    // toggle to add extra line breaks when pasting HTML:
+    matchVisual: false,
+  },
+}
+
 
 const ImageToText = () => {
   const [files, setFiles] = useState([]);
@@ -32,6 +48,7 @@ const ImageToText = () => {
       "image/png", 
       "application/pdf", 
       "application/msword", 
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ];
   
     const filteredFiles = selectedFiles.filter((file) =>
@@ -113,7 +130,7 @@ const ImageToText = () => {
         <input
           type="file"
           id="inputImage"
-          accept="image/jpeg, image/png, image/gif, application/pdf, application/msword"
+          accept="image/jpeg, image/png, image/gif, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
           multiple
           className="hidden"
           onChange={handleFileChange}
@@ -129,13 +146,9 @@ const ImageToText = () => {
         {isLoading ? "Loading..." : "Retranscrire"}
       </button>
 
-            <EditorToolbar 
-              toolbarId={'t1'}
-            />
             <ReactQuill
-              placeholder="Le texte de l'image s'afichera ici, vous pouvez le modifier à votre guise"
-              modules={modules('t1')}
-              formats={formats}
+              placeholder="Le texte de l'image s'afichera ici, vous pouvez le modifiez à votre guise"
+              modules={modules}
               className="w-full h-60"
               id="outputText"
               value={textResult || ""}
@@ -168,6 +181,17 @@ const ImageToText = () => {
                 >
                   <span className="text-4xl text-gray-400">
                     <i className="far fa-file-pdf"></i>
+                  </span>
+                </div>
+                <p className="text-sm truncate">{file.name}</p>
+              </div>
+            ) : file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ? (
+              <div>
+                <div 
+                  className="w-32 h-32 bg-gray-200 rounded-md flex items-center justify-center"
+                >
+                  <span className="text-4xl text-gray-400">
+                    <i className="far fa-file-word"></i>
                   </span>
                 </div>
                 <p className="text-sm truncate">{file.name}</p>
