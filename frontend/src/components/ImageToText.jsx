@@ -3,25 +3,41 @@
 import { useState, useEffect } from "react";
 import { createWorker }  from 'tesseract.js'
 
-import ReactQuill from "react-quill";
-import EditorToolbar, { modules, formats } from "./EditorToolbar";
+import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
-// import "./TextEditor.css";
 
+const ReactQuill = dynamic(() => import("react-quill"), { 
+  ssr: false,
+  loading: () => <p>Chargement ...</p>,
+});
 
-/* 
-Fonctionnalité
-- On ne peut que retranscrire une image à la fois 
-- Poster une épreuve vous pouvez mettre le recto et le verso
-- Permettre l'insertion d'image dans le textarea
-- Poster une question une seule image
-*/
+const modules = {
+  toolbar: [
+    [{ header: '1' }, { header: '2' }, { header: '3' }, { font: [] }],
+    [{ size: [] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [
+      { list: 'ordered' },
+      { list: 'bullet' },
+      { indent: '-1' },
+      { indent: '+1' },
+    ],
+    ['link', 'image', 'video'],
+    ['clean'],
+  ],
+  clipboard: {
+    // toggle to add extra line breaks when pasting HTML:
+    matchVisual: false,
+  },
+}
+
 
 const ImageToText = () => {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [textResult, setTextResult] = useState("");
+  const [imagePath, setImagePath] = useState("");
 
   /* Ajout d'image */
   const handleFileChange = (e) => {
@@ -78,19 +94,21 @@ const ImageToText = () => {
   /* Image to text */
   const getTextFromImage = async () => {
 
-    const imagesContainer = document.getElementById('imagePrint');
-    if (!imagesContainer) {
-        setError("Aucune image à transcrire");
-        return;
+    if (files.length === 0) {
+      setError("Aucune image à transcrire");
+      return;
     }
+
     setIsLoading(true)
+
+    const file = files[0];
+
     const worker = await createWorker()
     await worker.load()
     await worker.loadLanguage('eng')
     await worker.initialize('eng')
 
-    const { data: { text } } = await worker.recognize(imagesContainer.src);
-    console.log(text)
+    const { data: { text } } = await worker.recognize(file);
 
     setTextResult(text)
     setIsLoading(false)
@@ -128,13 +146,9 @@ const ImageToText = () => {
         {isLoading ? "Loading..." : "Retranscrire"}
       </button>
 
-            <EditorToolbar 
-              toolbarId={'t1'}
-            />
             <ReactQuill
-              placeholder="Le texte de l'image s'afichera ici, vous pouvez le modifier à votre guise"
-              modules={modules('t1')}
-              formats={formats}
+              placeholder="Le texte de l'image s'afichera ici, vous pouvez le modifiez à votre guise"
+              modules={modules}
               className="w-full h-60"
               id="outputText"
               value={textResult || ""}
