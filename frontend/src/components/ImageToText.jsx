@@ -32,7 +32,6 @@ const ImageToText = () => {
       "image/png", 
       "application/pdf", 
       "application/msword", 
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ];
   
     const filteredFiles = selectedFiles.filter((file) =>
