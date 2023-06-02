@@ -141,15 +141,15 @@ const ImageToText = () => {
         id="retranscribe-btn" 
         className="text-sm w-full px-4 py-2 mb-2 text-blue-500 bg-gray-200 hover:bg-gray-300"
         onClick={getTextFromImage}
-        disabled={isLoading}
+        disabled={files.length > 1}
       >
-        {isLoading ? "Loading..." : "Retranscrire"}
+        {files.length > 1 ? "Désactiver" : "Retranscrire"}
       </button>
 
             <ReactQuill
               placeholder="Le texte de l'image s'afichera ici, vous pouvez le modifiez à votre guise"
               modules={modules}
-              className="w-full h-60"
+              className="w-full h-auto"
               id="outputText"
               value={textResult || ""}
               onChange={(content) => setTextResult(content)}
