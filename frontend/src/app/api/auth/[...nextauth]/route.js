@@ -28,11 +28,9 @@ const handler = NextAuth({
     },
     async signIn({ account, profile, user, credentials }) {
       try {
-
         const emailToCheck = user?.email;
         // check if user already exists
         const userExists = await User?.some(user => user.email === emailToCheck);
-
         // if not, create a new object user and save it to the database
         if (!userExists) {
           // Create a new user object with the required data
@@ -43,7 +41,6 @@ const handler = NextAuth({
             is_social_network: true,
             profile_picture: user?.image || null,
           };
-
           // Make a POST request to the backend endpoint
           await axios.post(REGISTER, newUser)
             .then((response) => {
