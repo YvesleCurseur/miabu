@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { createWorker }  from 'tesseract.js'
 
+import CloseSvg from "../../public/icons/CloseSvg";
+
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 
@@ -32,12 +34,11 @@ const modules = {
 }
 
 
-const ImageToText = () => {
+const ImageToText = (props) => {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [textResult, setTextResult] = useState("");
-  const [imagePath, setImagePath] = useState("");
 
   /* Ajout d'image */
   const handleFileChange = (e) => {
@@ -111,14 +112,14 @@ const ImageToText = () => {
     const { data: { text } } = await worker.recognize(file);
 
     setTextResult(text)
+    props.onImagefromText(text)
     setIsLoading(false)
-    
+
     }
 
   return (
 
-    <div className="container mx-auto p-4">
-
+    <>
       <div className="mb-4">
         <label
           htmlFor="inputImage"
@@ -146,14 +147,14 @@ const ImageToText = () => {
         {files.length > 1 ? "Désactiver" : "Retranscrire"}
       </button>
 
-            <ReactQuill
-              placeholder="Le texte de l'image s'afichera ici, vous pouvez le modifiez à votre guise"
-              modules={modules}
-              className="w-full h-auto"
-              id="outputText"
-              value={textResult || ""}
-              onChange={(content) => setTextResult(content)}
-            />
+      <ReactQuill
+        placeholder="Le texte de l'image s'afichera ici, vous pouvez le modifiez à votre guise"
+        modules={modules}
+        className="w-full h-auto"
+        id="outputText"
+        value={textResult || ""}
+        onChange={(content) => setTextResult(content)}
+      />
 
       {error && (
         <div className="bg-red-500 text-white px-4 py-2 rounded-md mb-4">
@@ -214,25 +215,12 @@ const ImageToText = () => {
         className="absolute top-0 right-0 cursor-pointer text-red-500"
         onClick={() => handleRemoveFile(index)}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
+        <CloseSvg />
         </div>
         </div>
         ))}
       </div>
-  </div>
+    </>
   );
 };
 
