@@ -16,6 +16,7 @@ import { useSession } from 'next-auth/react';
 
 const CreateTopic = () => {
   const router = useRouter();
+  
   const { data: session } = useSession();
   const author = (Number(Cookies.get('ID_MIABU')) || 0);
   const [title, setTitle] = useState('');
@@ -29,10 +30,6 @@ const CreateTopic = () => {
   const [domainName, setDomainName] = useState('');
   // const [mediaFile, setMediaFile] = useState('');
   const [image, setImage] = useState('');
-
-  useEffect(() => {
-    console.log(author)    
-  }, [])
 
   // Callback function to receive content from child component
   const handleContentChange = (text) => {
@@ -78,8 +75,10 @@ const CreateTopic = () => {
     // Traiter la réponse
     // ...
   };
-  
-  if (!session) router.push('/')
+
+  useEffect(() => {
+    if (!session) router.push('/')
+  }, [])
   
   return (
     <>
