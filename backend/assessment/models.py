@@ -52,10 +52,8 @@ from forum.models import Topic
 class Evaluation(Topic):
     visits = models.PositiveIntegerField(default=0)
     # Establishment if we delete a establishment the evaluations not go away
+    level = models.ForeignKey(Level, on_delete=models.CASCADE, related_name='assessement_evaluations', null=True)
+    domain = models.ForeignKey(Domain, on_delete=models.CASCADE, related_name='assessement_evaluations', null=True)
+    course = models.ForeignKey(Course, on_delete=models.SET_NULL, related_name='assessement_evaluations', null=True)
     establishment = models.ForeignKey(Establishment, on_delete=models.SET_NULL, related_name='assessement_evaluations', null=True)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='assessement_evaluations')
-    level = models.ForeignKey(Level, on_delete=models.CASCADE, related_name='assessement_evaluations')
-
-    
-
-    
+    year = models.CharField(max_length=100)

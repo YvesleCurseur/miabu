@@ -1,9 +1,10 @@
 "use client";
 
-import Image from 'next/image'
-import Sidebar from '@/components/Sidebar';
 import { useEffect, useState } from 'react'
+
+import Sidebar from '@/components/Sidebar';
 import Feed from '@/components/Feed';
+
 import { getHelloWorld } from './api/hello-world/route';
 
 export default function Home() {

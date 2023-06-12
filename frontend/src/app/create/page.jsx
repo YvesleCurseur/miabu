@@ -1,39 +1,186 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
 import ImageToText from '@/components/ImageToText';
 import InputField from '@/components/InputField';
+import MetaTags from '@/components/MetaTags';
+
+import FormData from 'form-data';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
+
+import { createEvaluation } from '../api/assessment/route';
+import { useSession } from 'next-auth/react';
+
 
 const CreateTopic = () => {
-  const handleImagefromText = (text) => {
-    console.log('Text', text);
-  }
+  const router = useRouter();
+  const { data: session } = useSession();
+  const author = (Number(Cookies.get('ID_MIABU')) || 0);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [year, setYear] = useState('');
+  const [establishmentName, setEstablishmentName] = useState('');
+  const [establishmentDescription, setEstablishmentDescription] = useState('');
+  const [establishmentLocation, setEstablishmentLocation] = useState('');
+  const [levelName, setLevelName] = useState('');
+  const [courseName, setCourseName] = useState('');
+  const [domainName, setDomainName] = useState('');
+  // const [mediaFile, setMediaFile] = useState('');
+  const [image, setImage] = useState('');
 
+  useEffect(() => {
+    console.log(author)    
+  }, [])
+
+  // Callback function to receive content from child component
+  const handleContentChange = (text) => {
+    setContent(text);
+  };
+
+  // Callback function to receive image data from child component
+  const handleImageChange = (data) => {
+    setImage(data);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    // Créer un nouvel objet FormData
+    const formData = new FormData();
+  
+    // Ajouter les champs et leurs valeurs
+    formData.append('title', title);
+    formData.append('content', content);
+    formData.append('author', author);
+    formData.append('status', 'draft');
+    formData.append('year', year);
+    formData.append('establishment.name', establishmentName);
+    formData.append('establishment.description', establishmentDescription);
+    formData.append('establishment.location', establishmentLocation);
+    formData.append('level.name', levelName);
+    formData.append('course.name', courseName);
+    formData.append('domain.name', domainName);
+    // formData.append('media', mediaFile); 
+    formData.append('image', image);
+
+    for (const pair of formData.entries()) {
+      console.log(pair[0] + ':', pair[1]);
+    }
+  
+    // Envoyer la requête vers l'URL appropriée
+    createEvaluation(formData).then((response) => {
+      console.log(response);
+      router.push('/success');
+    })
+  
+    // Traiter la réponse
+    // ...
+  };
+  
+  if (!session) router.push('/')
+  
   return (
-    <section className='w-full max-w-full flex-start flex-col'>
-      <div className='mt-10 w-full max-w-2xl flex flex-col gap-7'>
-        <form action="/send-data-here" method="post">
-          <label htmlFor="title" className="block text-xl font-medium text-gray-700">
-            Titre
-          </label>
-          <input
-            id="title"
+    <>
+      <MetaTags 
+        title="Création | MiabuSUSU" 
+        description="Partagez une épreuve" 
+      />
+
+      <section className='w-full max-w-full flex-start flex-col'>
+        <div className='mt-10 w-full max-w-2xl flex flex-col gap-7'>
+        <form onSubmit={handleSubmit}>
+          <InputField
             name="title"
             type="text"
-            autoComplete="title"
+            label="Titre"
+            value={title}
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            // onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setTitle(e.target.value)}
           />
+
+          <InputField
+            name="year"
+            type="text"
+            label="Année"
+            value={year}
+            required
+            onChange={(e) => setYear(e.target.value)}
+          />
+
+          <InputField
+            name="establishment.name"
+            type="text"
+            label="Nom de l'établissement"
+            value={establishmentName}
+            required
+            onChange={(e) => setEstablishmentName(e.target.value)}
+          />
+
+          <InputField
+            name="establishment.description"
+            type="text"
+            label="Description de l'établissement"
+            value={establishmentDescription}
+            required
+            onChange={(e) => setEstablishmentDescription(e.target.value)}
+          />
+
+          <InputField
+            name="establishment.location"
+            type="text"
+            label="Emplacement de l'établissement"
+            value={establishmentLocation}
+            required
+            onChange={(e) => setEstablishmentLocation(e.target.value)}
+          />
+
+          <InputField
+            name="level.name"
+            type="text"
+            label="Niveau"
+            value={levelName}
+            required
+            onChange={(e) => setLevelName(e.target.value)}
+          />
+
+          <InputField
+            name="course.name"
+            type="text"
+            label="Cours"
+            value={courseName}
+            required
+            onChange={(e) => setCourseName(e.target.value)}
+          />
+
+          <InputField
+            name="domain.name"
+            type="text"
+            label="Domaine"
+            value={domainName}
+            required
+            onChange={(e) => setDomainName(e.target.value)}
+          />
+
           <div className="mt-5">
-            <ImageToText onImagefromText={handleImagefromText}/>
+            <ImageToText 
+              onImageFromText={handleContentChange} 
+              onImageUsed={handleImageChange}
+            />
           </div>
+
           <div className="mt-5 flex justify-end">
-            <button type="submit" className="w-1/2 px-3 py-2 text-white bg-rose-600 hover:bg-rose-700">Soumettre</button>
+            <button type='submit' className="w-1/2 px-3 py-2 text-white bg-rose-600 hover:bg-rose-700">
+              Soumettre
+            </button>
           </div>
         </form>
-      </div>
-    </section>
+
+        </div>
+      </section>
+      
+    </>
   )
 }
 

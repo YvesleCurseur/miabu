@@ -93,7 +93,7 @@ const ImageToText = (props) => {
   }, [files]);
 
   /* Image to text */
-  const getTextFromImage = async () => {
+  const getTextFromImage = async (textResult) => {
 
     if (files.length === 0) {
       setError("Aucune image à transcrire");
@@ -112,10 +112,13 @@ const ImageToText = (props) => {
     const { data: { text } } = await worker.recognize(file);
 
     setTextResult(text)
-    props.onImagefromText(text)
+    props.onImageFromText(text)
+    props.onImageUsed(file)
     setIsLoading(false)
 
     }
+
+    props.onImageFromText(textResult)
 
   return (
 
@@ -141,6 +144,7 @@ const ImageToText = (props) => {
       <button 
         id="retranscribe-btn" 
         className="text-sm w-full px-4 py-2 mb-2 text-blue-500 bg-gray-200 hover:bg-gray-300"
+        type="button"
         onClick={getTextFromImage}
         disabled={files.length > 1}
       >
@@ -150,10 +154,10 @@ const ImageToText = (props) => {
       <ReactQuill
         placeholder="Le texte de l'image s'afichera ici, vous pouvez le modifiez à votre guise"
         modules={modules}
-        className="w-full h-auto"
+        className="w-full h-auto bg-white border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none focus:ring-rose-600 focus:border-rose-600"
         id="outputText"
         value={textResult || ""}
-        onChange={(content) => setTextResult(content)}
+        onChange={(value) => setTextResult(value)}
       />
 
       {error && (
@@ -211,12 +215,13 @@ const ImageToText = (props) => {
             ) : (
               null
             )}
-      <div
-        className="absolute top-0 right-0 cursor-pointer text-red-500"
-        onClick={() => handleRemoveFile(index)}
-      >
-        <CloseSvg />
-        </div>
+            <div
+              className="absolute top-0 right-0 cursor-pointer text-blue-500"
+              onClick={() => handleRemoveFile(index)}
+            >
+              Effacer
+              <CloseSvg />
+            </div>
         </div>
         ))}
       </div>

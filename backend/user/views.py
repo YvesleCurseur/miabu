@@ -3,7 +3,6 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
-from .serializers import CustomUserSerializer, LoginUserSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 # import Social Login View
@@ -13,6 +12,7 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 
 from user.models import NewUser
 
+from .serializers import CustomUserSerializer, LoginUserSerializer, EmailSerializer
 
 # Pour se connecter
 class CustomUserCreate(GenericAPIView):
@@ -86,3 +86,21 @@ class CustomUserListView(APIView):
         users = NewUser.objects.all().order_by('-date_joined')
         serializer = CustomUserSerializer(users, many=True)
         return Response(serializer.data)
+
+class UserDetailView(GenericAPIView):
+    serializer_class = EmailSerializer  # Serializer personnalisé pour valider l'e-mail
+
+    # Poster l'e-mail et récupérer les informations de l'utilisateur
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            try:
+                user = NewUser.objects.get(email=email)
+                serializer = CustomUserSerializer(user)
+                return Response(serializer.data)
+            except NewUser.DoesNotExist:
+                return Response({'message': 'Utilisateur non trouvé'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

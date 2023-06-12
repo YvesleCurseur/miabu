@@ -1,31 +1,65 @@
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, status
 from rest_framework import permissions
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, DjangoModelPermissions, BasePermission, IsAdminUser, DjangoModelPermissionsOrAnonReadOnly
 from drf_yasg.utils import swagger_auto_schema
 from django.contrib.auth.models import User, Group
-from forum.serializers import TopicSerializer, AnswerSerializer
-from forum.models import Topic, Answer
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import filters
 from rest_framework.decorators import api_view
 
-class TopicUserWritePermission(BasePermission):
-    message = 'Editing post is restricted to the author only.'
+from forum.serializers import TopicSerializer, AnswerSerializer
 
-    def has_object_permission(self, request, view, obj):
-        if request.method in SAFE_METHODS:
-            return True
-        return obj.author == request.user
+from forum.models import Topic, Answer
+from assessment.models import Establishment, Course, Domain, Level
+
+
+
+# class TopicUserWritePermission(BasePermission):
+#     message = 'Editing post is restricted to the author only.'
+
+#     def has_object_permission(self, request, view, obj):
+#         if request.method in SAFE_METHODS:
+#             return True
+#         return obj.author == request.user
+
+# class TopicUserWritePermission(IsAuthenticated):
+#     def has_permission(self, request, view):
+#         # Vérifie si l'utilisateur est authentifié
+#         if not super().has_permission(request, view):
+#             return False
+        
+#         # Vérifie si l'ID de l'utilisateur est présent
+#         return bool(request.user.id)
 
 # Posez une topic
 class CreateTopicView(generics.CreateAPIView):
-    """
-        Add a Topic
-        Want: 'title', 'content', 'author', 'status'
-    """
     serializer_class = TopicSerializer
-    pass
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        establishment_id = serializer.validated_data.get('establishment')
+        establishment = get_object_or_404(Establishment, id=establishment_id)
+
+        Topic.objects.create(
+            title=serializer.validated_data.get('title'),
+            content=serializer.validated_data.get('content'),
+            slug=serializer.validated_data.get('slug'),
+            author=request.user,
+            status=serializer.validated_data.get('status'),
+        )
+
+        Establishment.objects.create(
+            name=establishment.name,
+        )
+
+
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 # Détail d'une Topic
 class ReadTopicView(generics.RetrieveAPIView):
@@ -58,23 +92,23 @@ class TopicListDetailFilter(generics.ListAPIView):
 
 
 # Modifier une Topic
-class UpdateTopicView(generics.UpdateAPIView, TopicUserWritePermission):
+class UpdateTopicView(generics.UpdateAPIView):
     """
         Update a specific Topic
         Return: ' ', 'title', 'content', 'create_at', 'author', 'status'
     """
-    permission_classes = [TopicUserWritePermission]
+    # permission_classes = [TopicUserWritePermission]
     queryset = Topic.topic_objects.all()
     serializer_class = TopicSerializer
 
 
 # Détail d'une Topic
-class DeleteTopicView(generics.DestroyAPIView, TopicUserWritePermission):
+class DeleteTopicView(generics.DestroyAPIView):
     """
         Get a specific Topic
         Return: 'id', 'title', 'content', 'create_at', 'author', 'status'
     """
-    permission_classes = [TopicUserWritePermission]
+    # permission_classes = [TopicUserWritePermission]
     queryset = Topic.topic_objects.all()
     serializer_class = TopicSerializer
 
