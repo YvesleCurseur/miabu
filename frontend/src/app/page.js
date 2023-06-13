@@ -27,10 +27,9 @@ export default function Home() {
           {/* <span className="orange_gradient">AI</span> */}
         </h1>
         <p className="desc text-center">Vous avez la possibilié de partager et de télécharger vos épreuves</p>
-        {/* <Feed /> */}
-        {message && (
-          <p className='text-center text-9xl'>{message}</p>
-        )}
+
+        <Feed />
+        
       </section>
     </div> 
   )

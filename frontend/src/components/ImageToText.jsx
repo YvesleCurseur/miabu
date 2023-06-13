@@ -93,7 +93,7 @@ const ImageToText = (props) => {
   }, [files]);
 
   /* Image to text */
-  const getTextFromImage = async (textResult) => {
+  const getTextFromImage = async () => {
 
     if (files.length === 0) {
       setError("Aucune image à transcrire");
@@ -106,13 +106,31 @@ const ImageToText = (props) => {
 
     const worker = await createWorker()
     await worker.load()
-    await worker.loadLanguage('eng')
-    await worker.initialize('eng')
+    await worker.loadLanguage('fra')
+    await worker.initialize('fra');
+
+    // await worker.setParameters({
+    //   tessedit_create_hocr: 1 
+    // });
 
     const { data: { text } } = await worker.recognize(file);
+    console.log(text)
+        
+    // const { data: { lines } } = await worker.recognize(file);
 
-    setTextResult(text)
-    props.onImageFromText(text)
+    // let formattedText = '';
+  
+    // for (let i = 0; i < lines.length; i++) {
+    //   const line = lines[i];
+  
+    //   const indentation = line.bbox.x0; // Indentation relative par rapport à la position de l'image entière
+    //   const spaces = ' '.repeat(indentation); // Création d'une chaîne d'espaces correspondant à l'indentation
+  
+    //   formattedText += spaces + line.text + '\n'; // Ajout des espaces à chaque ligne de texte avec un retour à la ligne
+    // }
+  
+    setTextResult(text);
+    props.onImageFromText(text);
     props.onImageUsed(file)
     setIsLoading(false)
 
@@ -148,13 +166,17 @@ const ImageToText = (props) => {
         onClick={getTextFromImage}
         disabled={files.length > 1}
       >
-        {files.length > 1 ? "Désactiver" : "Retranscrire"}
+        {files.length > 1
+          ? "Désactiver"
+          : isLoading
+          ? "Chargement..."
+          : "Retranscrire"}
       </button>
 
       <ReactQuill
         placeholder="Le texte de l'image s'afichera ici, vous pouvez le modifiez à votre guise"
         modules={modules}
-        className="w-full h-auto bg-white border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none focus:ring-rose-600 focus:border-rose-600"
+        className="w-full h-auto bg-white border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none focus:ring-rose-600 focus:border-rose-600 preserve-indent"
         id="outputText"
         value={textResult || ""}
         onChange={(value) => setTextResult(value)}

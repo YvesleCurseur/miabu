@@ -31,6 +31,14 @@ const CreateTopic = () => {
   // const [mediaFile, setMediaFile] = useState('');
   const [image, setImage] = useState('');
 
+  const currentYear = new Date().getFullYear();
+  const startYear = 2000;
+  const yearRange = Array.from({ length: currentYear - startYear + 1 }, (_, index) => {
+    const yearStart = startYear + index;
+    const yearEnd = yearStart + 1;
+    return `${yearStart}-${yearEnd}`;
+  });
+
   // Callback function to receive content from child component
   const handleContentChange = (text) => {
     setContent(text);
@@ -53,12 +61,12 @@ const CreateTopic = () => {
     formData.append('author', author);
     formData.append('status', 'draft');
     formData.append('year', year);
-    formData.append('establishment.name', establishmentName);
-    formData.append('establishment.description', establishmentDescription);
-    formData.append('establishment.location', establishmentLocation);
-    formData.append('level.name', levelName);
-    formData.append('course.name', courseName);
-    formData.append('domain.name', domainName);
+    // formData.append('establishment.name', establishmentName);
+    // formData.append('establishment.description', establishmentDescription);
+    // formData.append('establishment.location', establishmentLocation);
+    // formData.append('level.name', levelName);
+    // formData.append('course.name', courseName);
+    // formData.append('domain.name', domainName);
     // formData.append('media', mediaFile); 
     formData.append('image', image);
 
@@ -99,16 +107,22 @@ const CreateTopic = () => {
             onChange={(e) => setTitle(e.target.value)}
           />
 
-          <InputField
+          <select
             name="year"
-            type="text"
-            label="Année"
             value={year}
             required
             onChange={(e) => setYear(e.target.value)}
-          />
+            className="block mt-5 px-4 py-2 mb-2 text-gray-800 bg-white border border-gray-300 focus:outline-none focus:border-red-500"
+          >
+            <option value="">Sélectionnez une année</option>
+            {yearRange.map((yearOption) => (
+              <option key={yearOption} value={yearOption}>
+                {yearOption}
+              </option>
+            ))}
+          </select>
 
-          <InputField
+          {/* <InputField
             name="establishment.name"
             type="text"
             label="Nom de l'établissement"
@@ -160,7 +174,7 @@ const CreateTopic = () => {
             value={domainName}
             required
             onChange={(e) => setDomainName(e.target.value)}
-          />
+          /> */}
 
           <div className="mt-5">
             <ImageToText 
