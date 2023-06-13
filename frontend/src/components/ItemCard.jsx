@@ -38,7 +38,7 @@ const ItemCard = ({ evaluation }) => {
             <div class="flex-shrink-0">
               {evaluation.author.profile_picture ? 
                 <img class="h-10 w-10 rounded-full" src={evaluation.author.profile_picture} alt={evaluation.author.username} /> :
-                <p className="font-bold text-white black_btn">{evaluation.author.username.substr(0, 2).toUpperCase()}</p>
+                <p className="font-bold text-white rounded-full bg-black">{evaluation.author.username.substr(0, 2).toUpperCase()}</p>
               }
             </div>
             <div class="min-w-0 flex-1">
