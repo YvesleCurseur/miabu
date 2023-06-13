@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CustomUserCreate, BlacklistTokenUpdateView, FacebookLogin, GoogleLogin, CustomUserListView, LoginUserView
+from .views import CustomUserCreate, BlacklistTokenUpdateView, FacebookLogin, GoogleLogin, CustomUserListView, LoginUserView, UserDetailView
 
 from dj_rest_auth.registration.views import SocialLoginView
 
@@ -13,6 +13,7 @@ urlpatterns = [
     path('login/', LoginUserView.as_view(), name="login"),
     # path('logout/blacklist/', BlacklistTokenUpdateView.as_view(), name='blacklist'),
     path('list-users/', CustomUserListView.as_view(), name='list_users'),
+    path('detail-user/', UserDetailView.as_view(), name='detail_user'),
     # social auth
     path('rest-auth/facebook/', GoogleLogin.as_view(), name='facebook_auth'),
     path('rest-auth/google/', FacebookLogin.as_view(), name='google_auth'),

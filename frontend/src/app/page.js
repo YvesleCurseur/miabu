@@ -1,9 +1,10 @@
 "use client";
 
-import Image from 'next/image'
-import Sidebar from '@/components/Sidebar';
 import { useEffect, useState } from 'react'
+
+import Sidebar from '@/components/Sidebar';
 import Feed from '@/components/Feed';
+
 import { getHelloWorld } from './api/hello-world/route';
 
 export default function Home() {
@@ -26,10 +27,9 @@ export default function Home() {
           {/* <span className="orange_gradient">AI</span> */}
         </h1>
         <p className="desc text-center">Vous avez la possibilié de partager et de télécharger vos épreuves</p>
-        {/* <Feed /> */}
-        {message && (
-          <p className='text-center text-9xl'>{message}</p>
-        )}
+
+        <Feed />
+        
       </section>
     </div> 
   )

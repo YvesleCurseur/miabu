@@ -106,16 +106,37 @@ const ImageToText = (props) => {
 
     const worker = await createWorker()
     await worker.load()
-    await worker.loadLanguage('eng')
-    await worker.initialize('eng')
+    await worker.loadLanguage('fra')
+    await worker.initialize('fra');
+
+    // await worker.setParameters({
+    //   tessedit_create_hocr: 1 
+    // });
 
     const { data: { text } } = await worker.recognize(file);
+    console.log(text)
+        
+    // const { data: { lines } } = await worker.recognize(file);
 
-    setTextResult(text)
-    props.onImagefromText(text)
+    // let formattedText = '';
+  
+    // for (let i = 0; i < lines.length; i++) {
+    //   const line = lines[i];
+  
+    //   const indentation = line.bbox.x0; // Indentation relative par rapport à la position de l'image entière
+    //   const spaces = ' '.repeat(indentation); // Création d'une chaîne d'espaces correspondant à l'indentation
+  
+    //   formattedText += spaces + line.text + '\n'; // Ajout des espaces à chaque ligne de texte avec un retour à la ligne
+    // }
+  
+    setTextResult(text);
+    props.onImageFromText(text);
+    props.onImageUsed(file)
     setIsLoading(false)
 
     }
+
+    props.onImageFromText(textResult)
 
   return (
 
@@ -141,19 +162,24 @@ const ImageToText = (props) => {
       <button 
         id="retranscribe-btn" 
         className="text-sm w-full px-4 py-2 mb-2 text-blue-500 bg-gray-200 hover:bg-gray-300"
+        type="button"
         onClick={getTextFromImage}
         disabled={files.length > 1}
       >
-        {files.length > 1 ? "Désactiver" : "Retranscrire"}
+        {files.length > 1
+          ? "Désactiver"
+          : isLoading
+          ? "Chargement..."
+          : "Retranscrire"}
       </button>
 
       <ReactQuill
         placeholder="Le texte de l'image s'afichera ici, vous pouvez le modifiez à votre guise"
         modules={modules}
-        className="w-full h-auto"
+        className="w-full h-auto bg-white border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none focus:ring-rose-600 focus:border-rose-600 preserve-indent"
         id="outputText"
         value={textResult || ""}
-        onChange={(content) => setTextResult(content)}
+        onChange={(value) => setTextResult(value)}
       />
 
       {error && (
@@ -211,12 +237,13 @@ const ImageToText = (props) => {
             ) : (
               null
             )}
-      <div
-        className="absolute top-0 right-0 cursor-pointer text-red-500"
-        onClick={() => handleRemoveFile(index)}
-      >
-        <CloseSvg />
-        </div>
+            <div
+              className="absolute top-0 right-0 cursor-pointer text-blue-500"
+              onClick={() => handleRemoveFile(index)}
+            >
+              Effacer
+              <CloseSvg />
+            </div>
         </div>
         ))}
       </div>

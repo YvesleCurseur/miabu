@@ -23,8 +23,19 @@ const handler = NextAuth({
   callbacks: {
     async session({ session }) {
       // store the user id from MongoDB to session
-      User?.some(user => user.email === session.user.email);
-      return session;
+      try {
+        const userList = getListUser();
+        if (Array.isArray(userList)) {
+          const user = userList.find((user) => user.email === session.user.email);
+          if (user) {
+            session.user.id = user.id;
+          }
+        }
+        return session;
+      } catch (error) {
+        console.error('Error retrieving user information:', error);
+        throw error;
+      }
     },
     async signIn({ account, profile, user, credentials }) {
       try {
@@ -50,8 +61,8 @@ const handler = NextAuth({
             .catch((error) => {
               // Handle any errors that occur during the request
               console.error('The error', error);
-            });
-        }
+            });         
+        }  
         return true
       } catch (error) {
         console.log("Error checking if user exists: ", error.message);

@@ -195,3 +195,7 @@ main {
     display: none;
   }
 } 
+
+.preserve-indent {
+  white-space: pre-wrap;
+}

@@ -57,3 +57,11 @@ class LoginUserSerializer(serializers.ModelSerializer):
         if NewUser.objects.filter(email=value).exists() is False:
             raise serializers.ValidationError("Provided credentials are not correct.")
         return value
+    
+class EmailSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NewUser
+        fields = ['id', 'email', 'username', 'first_name', 'last_name', 'profile_picture', 'is_social_network']

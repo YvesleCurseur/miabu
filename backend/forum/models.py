@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.utils.text import slugify
 from ressource.models import Media
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
 # Files (Evaluation, Topic, Category, Etablishment)
 class Category(models.Model):
@@ -56,7 +57,8 @@ class Topic(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='forum_topics')
     # To know if the topic is published or not
     status = models.CharField(max_length=10, choices=OPTIONS, default='publish')
-    media = models.ManyToManyField(Media, blank=True)
+    media = models.FileField(upload_to='raw/', blank=True, storage=RawMediaCloudinaryStorage())
+    image = models.ImageField(upload_to='images/', blank=True)
     # Default manager
     objects = models.Manager()  
     # Custom manager

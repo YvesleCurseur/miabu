@@ -6,6 +6,7 @@ import { getProviders, signIn, signOut, useSession } from "next-auth/react"
 import { useRouter } from 'next/navigation';
 
 import { signInUser } from '../api/user/route';
+import { getListUser } from '../api/user/route';
 
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from '@/features/user/userSlice';
@@ -23,15 +24,13 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const userInfos = useSelector((state) => state.user);
-  
-    console.log(userInfos)
 
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const setUpProviders = async () => {
         const response = await getProviders();
-        setProviders(response);
+          setProviders(response);
         };
         setUpProviders();
     }, []);

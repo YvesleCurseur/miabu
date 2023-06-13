@@ -7,8 +7,6 @@ import { signUpUser } from '../api/user/route';
 
 import InputField from '@/components/InputField';
 
-
-
 const SignupPage = () => {
   const [first_name, setFirstName] = useState('');
   const [last_name, setLastName] = useState('');
