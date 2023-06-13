@@ -32,11 +32,14 @@ const ItemCard = ({ evaluation }) => {
 
   return (
     <>
-      <article ref={cardRef} aria-labelledby={evaluation.id} className="w-4/5 m-20">
+      <article ref={cardRef} aria-labelledby={evaluation.id} className="w-4/5 m-20 border border-gray-200 hover:bg-white p-10">
         <div>
           <div class="flex space-x-3">
             <div class="flex-shrink-0">
-              <img class="h-10 w-10 rounded-full" src={evaluation.author.profile_picture} alt=""  />
+              {evaluation.author.profile_picture ? 
+                <img class="h-10 w-10 rounded-full" src={evaluation.author.profile_picture} alt={evaluation.author.username} /> :
+                <p className="font-bold text-white black_btn">{evaluation.author.username.substr(0, 2).toUpperCase()}</p>
+              }
             </div>
             <div class="min-w-0 flex-1">
               <p class="text-sm font-medium text-gray-900">
