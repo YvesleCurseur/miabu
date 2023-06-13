@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-3a9_r8r1!@uo#$@150tmc&mwkdggv_86-hp#y)&2$pj!9+fg#s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['http://miabususu.pythonanywhere.com/', 'miabususu.pythonanywhere.com']
 
 
 # Application definition
@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'drf_yasg',
     'assessment',
-    'forum', 
+    'forum',
     'ressource',
     'user',
     'corsheaders',
@@ -145,7 +145,7 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    # Tout le monde peut y accéder 
+    # Tout le monde peut y accéder
     'DEFAULT_PERMISSION_CLASSES': [
         # 'rest_framework.permissions.AllowAny',
         # 'rest_framework.permissions.IsAuthenticatedOrReadOnly'
