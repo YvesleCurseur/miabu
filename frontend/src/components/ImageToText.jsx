@@ -3,21 +3,38 @@
 import { useState, useEffect } from "react";
 import { createWorker }  from 'tesseract.js'
 
-import ReactQuill from "react-quill";
-import EditorToolbar, { modules, formats } from "./EditorToolbar";
+import CloseSvg from "../../public/icons/CloseSvg";
+
+import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
-// import "./TextEditor.css";
+
+const ReactQuill = dynamic(() => import("react-quill"), { 
+  ssr: false,
+  loading: () => <p>Chargement ...</p>,
+});
+
+const modules = {
+  toolbar: [
+    [{ header: '1' }, { header: '2' }, { header: '3' }, { font: [] }],
+    [{ size: [] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [
+      { list: 'ordered' },
+      { list: 'bullet' },
+      { indent: '-1' },
+      { indent: '+1' },
+    ],
+    ['link', 'image', 'video'],
+    ['clean'],
+  ],
+  clipboard: {
+    // toggle to add extra line breaks when pasting HTML:
+    matchVisual: false,
+  },
+}
 
 
-/* 
-Fonctionnalité
-- On ne peut que retranscrire une image à la fois 
-- Poster une épreuve vous pouvez mettre le recto et le verso
-- Permettre l'insertion d'image dans le textarea
-- Poster une question une seule image
-*/
-
-const ImageToText = () => {
+const ImageToText = (props) => {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -78,29 +95,31 @@ const ImageToText = () => {
   /* Image to text */
   const getTextFromImage = async () => {
 
-    const imagesContainer = document.getElementById('imagePrint');
-    if (!imagesContainer) {
-        setError("Aucune image à transcrire");
-        return;
+    if (files.length === 0) {
+      setError("Aucune image à transcrire");
+      return;
     }
+
     setIsLoading(true)
+
+    const file = files[0];
+
     const worker = await createWorker()
     await worker.load()
     await worker.loadLanguage('eng')
     await worker.initialize('eng')
 
-    const { data: { text } } = await worker.recognize(imagesContainer.src);
-    console.log(text)
+    const { data: { text } } = await worker.recognize(file);
 
     setTextResult(text)
+    props.onImagefromText(text)
     setIsLoading(false)
-    
+
     }
 
   return (
 
-    <div className="container mx-auto p-4">
-
+    <>
       <div className="mb-4">
         <label
           htmlFor="inputImage"
@@ -123,23 +142,19 @@ const ImageToText = () => {
         id="retranscribe-btn" 
         className="text-sm w-full px-4 py-2 mb-2 text-blue-500 bg-gray-200 hover:bg-gray-300"
         onClick={getTextFromImage}
-        disabled={isLoading}
+        disabled={files.length > 1}
       >
-        {isLoading ? "Loading..." : "Retranscrire"}
+        {files.length > 1 ? "Désactiver" : "Retranscrire"}
       </button>
 
-            <EditorToolbar 
-              toolbarId={'t1'}
-            />
-            <ReactQuill
-              placeholder="Le texte de l'image s'afichera ici, vous pouvez le modifier à votre guise"
-              modules={modules('t1')}
-              formats={formats}
-              className="w-full h-60"
-              id="outputText"
-              value={textResult || ""}
-              onChange={(content) => setTextResult(content)}
-            />
+      <ReactQuill
+        placeholder="Le texte de l'image s'afichera ici, vous pouvez le modifiez à votre guise"
+        modules={modules}
+        className="w-full h-auto"
+        id="outputText"
+        value={textResult || ""}
+        onChange={(content) => setTextResult(content)}
+      />
 
       {error && (
         <div className="bg-red-500 text-white px-4 py-2 rounded-md mb-4">
@@ -200,25 +215,12 @@ const ImageToText = () => {
         className="absolute top-0 right-0 cursor-pointer text-red-500"
         onClick={() => handleRemoveFile(index)}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
+        <CloseSvg />
         </div>
         </div>
         ))}
       </div>
-  </div>
+    </>
   );
 };
 

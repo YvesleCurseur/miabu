@@ -1,7 +1,7 @@
 
 
 const InputField = ({ name, type, label, value, error, onChange }) => (
-  <div>
+  <>
     <label htmlFor={name} className="block text-sm font-medium text-gray-700">
       {label}
     </label>
@@ -22,7 +22,7 @@ const InputField = ({ name, type, label, value, error, onChange }) => (
       <p className="mt-2 text-sm text-red-500">{error}</p>
       </div>
     )}
-  </div>
+  </>
 );
 
 export default InputField
