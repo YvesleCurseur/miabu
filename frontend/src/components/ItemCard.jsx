@@ -38,7 +38,9 @@ const ItemCard = ({ evaluation }) => {
             <div class="flex-shrink-0">
               {evaluation.author.profile_picture ? 
                 <img class="h-10 w-10 rounded-full" src={evaluation.author.profile_picture} alt={evaluation.author.username} /> :
-                <p className="font-bold text-white rounded-full bg-black">{evaluation.author.username.substr(0, 2).toUpperCase()}</p>
+                <p className="font-bold h-10 w-10 flex items-center justify-center rounded-full bg-black text-white text-center">
+                  {evaluation.author.username.substr(0, 2).toUpperCase()}
+                </p>              
               }
             </div>
             <div class="min-w-0 flex-1">
@@ -100,7 +102,7 @@ const ItemCard = ({ evaluation }) => {
           <h2 id={evaluation.id} class="mt-4 text-base font-medium text-gray-900">{evaluation.title}</h2>
         </div>
         <div class="mt-2 text-sm text-gray-700 space-y-4">
-          <p className="whitespace-pre-line">{evaluation.content}</p>
+          <p className="whitespace-pre-line line-clamp-3">{evaluation.content}</p>
         </div>
         <div class="mt-6 flex justify-between space-x-8">
           <div class="flex space-x-6">
