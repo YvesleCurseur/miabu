@@ -246,4 +246,5 @@ CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dvmkojfzr',
     'API_KEY': '344368124351159',
     'API_SECRET': 'NPLoUVdwHkpsN_nTwTLiukYFQ78',
+    'SECURE': True,
 }
