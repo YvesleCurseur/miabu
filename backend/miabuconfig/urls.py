@@ -50,5 +50,6 @@ urlpatterns = [
    # The app
     path(f'{BASE_PATH}/forum/', include('forum.urls')),
     path(f'{BASE_PATH}/user/', include('user.urls', namespace='user')),
+    path(f'{BASE_PATH}/assessment/', include('assessment.urls', namespace='assessment')),
     path(f'{BASE_PATH}/hello-world/', views.hello_world, name='hello-world'),
 ]

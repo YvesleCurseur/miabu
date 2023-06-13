@@ -1,6 +1,8 @@
 import axios from "axios";
-import { GET_LIST_USER, LOGIN, REGISTER } from "..";
+import { GET_LIST_USER, GET_DETAIL_USER, LOGIN, REGISTER } from "..";
 // Make a get request to the API
+
+import Cookies from "js-cookie";
 
 function getListUser() {
     return axios
@@ -41,4 +43,19 @@ function signUpUser(userSubmission){
 	});
 };
 
-export { getListUser, signInUser, signUpUser };
+function getDetailUser(email){
+	return axios
+	.post(GET_DETAIL_USER, {
+		email
+	})
+	.then((response) => {
+		const data = response.data; // Extracts the response data
+		console.log(data); // Logs the response data to the console
+		return data; // Returns the response data
+	})
+	.catch((error) => {
+		console.error(error); // Logs the error to the console
+		throw error; // Throws the error to be caught by the caller
+	});
+};
+export { getListUser, getDetailUser, signInUser, signUpUser };

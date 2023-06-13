@@ -5,10 +5,11 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react'
 import { getProviders, signIn, signOut, useSession } from "next-auth/react"
 import { useRouter } from 'next/navigation';
-
-import { useSelector, useDispatch } from "react-redux";
-import { clearUser } from '@/features/user/userSlice';
 import Cookies from 'js-cookie';
+import { useSelector, useDispatch } from "react-redux";
+
+import { clearUser } from '@/features/user/userSlice';
+import { getDetailUser } from '@/app/api/user/route';
 
 const Navbar = () => {
 
@@ -22,15 +23,29 @@ const Navbar = () => {
     const userInfos = useSelector((state) => state.user);
     const [userSessionID, setUserSessionID] = useState(0);
 
+    // useEffect(() => {
+    //     if (userInfos?.id !== 0) {
+    //         setUserSessionID(userInfos.id)
+    //     }
+    // }, [])
+
     useEffect(() => {
-        if (userInfos?.id !== 0) {
-            setUserSessionID(userInfos.id)
+        if (session?.user?.email) {
+          getDetailUser(session.user.email)
+            .then((response) => {
+              Cookies.set('ID_MIABU', response.id);
+            })
+            .catch((error) => {
+              // Handle error if necessary
+              console.error(error);
+            });
         }
-    }, [])
+    }, [session]);
 
     const handleSignOut = async () => {
         setLoading(true)
         const data = await signOut({redirect: false, callbackUrl: "/"})
+        Cookies.remove('ID_MIABU');
         data.url
         router.push(data.url)
         setLoading(false)
@@ -64,8 +79,8 @@ const Navbar = () => {
         <div className="sm:flex hidden">
             {session?.user ? (
                 <div className="flex gap-3 md:gap-5">
-                <Link href="/create-prompt" className="black_btn">
-                    Posez une question
+                <Link href="/create" className="black_btn">
+                    Postez une épreuve
                 </Link>
                 <button type="button" onClick={() => handleSignOut()} className="outline_btn">
                     Déconnexion
