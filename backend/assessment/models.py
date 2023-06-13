@@ -57,3 +57,6 @@ class Evaluation(Topic):
     course = models.ForeignKey(Course, on_delete=models.SET_NULL, related_name='assessement_evaluations', null=True)
     establishment = models.ForeignKey(Establishment, on_delete=models.SET_NULL, related_name='assessement_evaluations', null=True)
     year = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.title

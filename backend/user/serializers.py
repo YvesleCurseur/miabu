@@ -60,3 +60,8 @@ class LoginUserSerializer(serializers.ModelSerializer):
     
 class EmailSerializer(serializers.Serializer):
     email = serializers.EmailField()
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NewUser
+        fields = ['id', 'email', 'username', 'first_name', 'last_name', 'profile_picture', 'is_social_network']

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from assessment.models import Evaluation, Establishment, Course, Domain, Level
+from user.serializers import UserDetailSerializer
 
 class EstablishmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,38 +23,48 @@ class CourseSerializer(serializers.ModelSerializer):
         fields = ['name']
 
 class EvaluationSerializer(serializers.ModelSerializer):
+    level = LevelSerializer(required=False, allow_null=True)
+    domain = DomainSerializer(required=False, allow_null=True)
+    course = CourseSerializer(required=False, allow_null=True)
     establishment = EstablishmentSerializer(required=False, allow_null=True)
-    level = LevelSerializer()
-    course = CourseSerializer()
-    domain = DomainSerializer()
 
     class Meta:
         model = Evaluation
-        fields = ['id', 'title', 'content', 'author', 'status', 'year', 'establishment', 'level', 'course', 'domain', 'media', 'image']
+        fields = ['id', 'title', 'content', 'author', 'status', 'year', 'establishment', 'level', 'course', 'domain', 'media', 'image', 'create_at', 'last_update_at']
 
     def create(self, validated_data):
+        level_data = validated_data.pop('level', None)
+        course_data = validated_data.pop('course', None)
+        domain_data = validated_data.pop('domain', None)
         establishment_data = validated_data.pop('establishment', None)
-        level_data = validated_data.pop('level')
-        course_data = validated_data.pop('course')
-        domain_data = validated_data.pop('domain')
 
-        domain_name = domain_data.get('name')
-        domain = Domain.objects.create(name=domain_name)
+        if domain_data is not None:
 
-        evaluation = Evaluation.objects.create(**validated_data)
+            domain_name = domain_data.get('name')
+            domain = Domain.objects.create(name=domain_name)
 
-        if establishment_data:
-            establishment = Establishment.objects.create(**establishment_data)
-            evaluation.establishment = establishment
+            evaluation = Evaluation.objects.create(**validated_data)
 
-        level = Level.objects.create(**level_data)
-        course = Course.objects.create(establishment=evaluation.establishment, domain=domain, **course_data)
+            if establishment_data:
+                establishment = Establishment.objects.create(**establishment_data)
+                evaluation.establishment = establishment
 
-        evaluation.level = level
-        evaluation.course = course
-        evaluation.domain = domain
-        evaluation.save()
+            level = Level.objects.create(**level_data)
+            course = Course.objects.create(establishment=evaluation.establishment, domain=domain, **course_data)
+
+            evaluation.level = level
+            evaluation.course = course
+            evaluation.domain = domain
+            evaluation.save()
+        else :
+            evaluation = Evaluation.objects.create(**validated_data)
 
         return evaluation
+
+class EvaluationDetailSerializer(serializers.ModelSerializer):
+    author = UserDetailSerializer(required=False, allow_null=True)
+    class Meta:
+        model = Evaluation
+        fields = ['id', 'title', 'content', 'author', 'status', 'year', 'establishment', 'level', 'course', 'domain', 'media', 'image', 'create_at', 'last_update_at']
 
 

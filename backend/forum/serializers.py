@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User, Group
-from forum.models import Answer, Topic, Comment
+from forum.models import Answer, Topic
 from assessment.serializers import *
+from user.serializers import *
 
 class TopicSerializer(serializers.ModelSerializer):
     establishment = EstablishmentSerializer()
