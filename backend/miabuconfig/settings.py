@@ -246,7 +246,6 @@ CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dvmkojfzr',
     'API_KEY': '344368124351159',
     'API_SECRET': 'NPLoUVdwHkpsN_nTwTLiukYFQ78',
+    'API_PROXY': 'http://proxy.server:3128',
     'SECURE': True
 }
-
-CLOUDINARY_URL='cloudinary://344368124351159:NPLoUVdwHkpsN_nTwTLiukYFQ78@dvmkojfzr?cname=miabususu.pythonanywhere.com'
