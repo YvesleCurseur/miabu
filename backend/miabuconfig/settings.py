@@ -136,7 +136,7 @@ STATIC_URL = 'static/'
 # Custom config i add for the static and media files
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'  # or any prefix you choose
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -242,10 +242,24 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+import cloudinary
+import cloudinary_storage
+cloudinary.config( 
+  cloud_name = "dvmkojfzr", 
+  api_key = "344368124351159", 
+  api_secret = "NPLoUVdwHkpsN_nTwTLiukYFQ78",
+  api_proxy = "http://proxy.server:3128"
+)
+import cloudinary.uploader
+import cloudinary.api
+
+# Configure Cloudinary storage
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dvmkojfzr',
     'API_KEY': '344368124351159',
     'API_SECRET': 'NPLoUVdwHkpsN_nTwTLiukYFQ78',
-    'API_PROXY': 'http://proxy.server:3128',
-    'SECURE': True
+    # Optionally, specify additional settings such as 'FOLDER', 'PREFIX', etc.
 }
+
+# Set the default storage backend to Cloudinary storage
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
