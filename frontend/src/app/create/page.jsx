@@ -184,7 +184,7 @@ const CreateTopic = () => {
           </div>
 
           <div className="mt-5 flex justify-end">
-            <button type='submit' className="w-1/2 px-3 py-2 text-white bg-rose-600 hover:bg-rose-700">
+            <button type='submit' className="text-sm w-1/2 px-3 py-2 text-white bg-rose-500 hover:bg-rose-600">
               Soumettre
             </button>
           </div>

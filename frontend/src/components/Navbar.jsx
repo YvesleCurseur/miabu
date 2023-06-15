@@ -79,17 +79,17 @@ const Navbar = () => {
         <div className="sm:flex hidden">
             {session?.user ? (
                 <div className="flex gap-3 md:gap-5">
-                <Link href="/create" className="black_btn">
+                <Link href="/create" className="px-3 py-2 text-sm text-white bg-rose-500 hover:bg-rose-600">
                     Postez une épreuve
                 </Link>
-                <button type="button" onClick={() => handleSignOut()} className="outline_btn">
+                <button type="button" onClick={() => handleSignOut()} className="text-sm px-3 py-2 text-blue-500 bg-gray-200 hover:bg-gray-300">
                     Déconnexion
                 </button>
                 <Link href="/profile">
                     {session?.user.image?.includes('platform-lookaside') ? (
                     <p className="font-bold text-white black_btn">{session?.user.name.substr(0, 2).toUpperCase()}</p>
                     ) : (
-                    <Image src={session?.user.image} width={30} height={30} className="rounded-full" alt="profile" />
+                    <Image src={session?.user.image} width={30} height={30} className="rounded-full mt-1" alt="profile" />
                     )}
                 </Link>
                 </div>
@@ -110,7 +110,7 @@ const Navbar = () => {
             ) : (
                 <>
                     <Link href="/login">
-                    <button type="button">Connexion</button>
+                        <button type="button" className="px-3 py-2 text-sm text-white bg-rose-500 hover:bg-rose-600">Connexion</button>
                     </Link>
                 </>
             )}

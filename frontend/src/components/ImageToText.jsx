@@ -144,7 +144,7 @@ const ImageToText = (props) => {
       <div className="mb-4">
         <label
           htmlFor="inputImage"
-          className="text-sm w-full px-4 py-2 text-white bg-rose-600 hover:bg-rose-700"
+          className="text-sm w-full px-3 py-2 text-white bg-rose-500 hover:bg-rose-600"
           style={{cursor:"pointer"}}
         >
           {files.length > 0 ? "Ajouter d'autres images" : "Ajouter une image"}
@@ -161,7 +161,7 @@ const ImageToText = (props) => {
 
       <button 
         id="retranscribe-btn" 
-        className="text-sm w-full px-4 py-2 mb-2 text-blue-500 bg-gray-200 hover:bg-gray-300"
+        className="text-sm w-full px-3 py-2 mb-2 text-blue-500 bg-gray-200 hover:bg-gray-300"
         type="button"
         onClick={getTextFromImage}
         disabled={files.length > 1}
