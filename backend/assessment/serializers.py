@@ -64,7 +64,7 @@ class EvaluationSerializer(serializers.ModelSerializer):
 
 class EvaluationDetailSerializer(serializers.ModelSerializer):
     author = UserDetailSerializer(required=False, allow_null=True)
-    answers = AnswerDetailSerializer(many=True, source='assessment_answers')
+    answers = AnswerDetailSerializer(many=True, source='assessment_answers') 
 
     class Meta:
         model = Evaluation
