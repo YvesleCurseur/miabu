@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from assessment.models import Evaluation, Establishment, Course, Domain, Level
 from user.serializers import UserDetailSerializer
+from forum.serializers import AnswerSerializer, AnswerDetailSerializer
 
 class EstablishmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -63,8 +64,8 @@ class EvaluationSerializer(serializers.ModelSerializer):
 
 class EvaluationDetailSerializer(serializers.ModelSerializer):
     author = UserDetailSerializer(required=False, allow_null=True)
+    answers = AnswerDetailSerializer(many=True, source='assessment_answers')
+
     class Meta:
         model = Evaluation
-        fields = ['id', 'title', 'content', 'author', 'status', 'year', 'establishment', 'level', 'course', 'domain', 'media', 'image', 'create_at', 'last_update_at']
-
-
+        fields = ['id', 'title', 'content', 'author', 'status', 'year', 'establishment', 'level', 'course', 'domain', 'media', 'image', 'create_at', 'last_update_at', 'answers']

@@ -13,3 +13,7 @@ class CreateEvaluationView(generics.CreateAPIView):
 class GetEvaluationsView(generics.ListAPIView):
     queryset = Evaluation.objects.filter(status='publish')
     serializer_class = EvaluationDetailSerializer
+
+class GetEvaluationByIdView(generics.RetrieveAPIView):
+    queryset = Evaluation.objects.filter(status='publish')
+    serializer_class = EvaluationDetailSerializer

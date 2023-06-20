@@ -7,6 +7,13 @@ from django.utils.text import slugify
 from ressource.models import Media
 from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
+from assessment.models import Course, Domain, Level, Establishment, Evaluation
+
+OPTIONS = (
+        ('draft', 'Draft'),
+        ('publish', 'Publish'),
+    )
+
 # Files (Evaluation, Topic, Category, Etablishment)
 class Category(models.Model):
     """
@@ -28,13 +35,7 @@ class Topic(models.Model):
     # A custom manager(Model) to retrieve only published questions
     class TopicObjects(models.Manager):
         def get_queryset(self):
-            return super().get_queryset() .filter(status='publish')
-
-    # Draft or publish 
-    OPTIONS = (
-        ('draft', 'Draft'),
-        ('publish', 'Publish'),
-    )
+            return super().get_queryset().filter(status='publish')
 
     title = models.CharField(max_length=150)
     # Content of the topic, which should receive text
@@ -51,7 +52,7 @@ class Topic(models.Model):
     # Specifically, each record in the current model can be linked to a record in the Category model, 
     # but each record in the Category model can be linked to multiple records in the current model. 
     # That's why it's called a "one-to-many" relationship.
-    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     # Author of the answer I set it to SET_DEFAULT on delete to always have the author of the topic
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='forum_topics')
@@ -74,7 +75,7 @@ class Topic(models.Model):
         """
         return self.likes.count()
     
-    # Order bythe last publish
+    # Order by the last publish
     class Meta:
         ordering = ['-publish_at']
 
@@ -86,32 +87,26 @@ class Topic(models.Model):
         self.delete_at = timezone.now()
         self.save()
 
+
 class Answer(models.Model):
-    """
-        User create an answer
-        All the answers are linked to a question
-    """
     content = models.TextField()
     media = models.ManyToManyField(Media, blank=True)
     create_at = models.DateTimeField(default=timezone.now)
     last_update_at = models.DateTimeField(default=timezone.now)
     delete_at = models.DateTimeField(default=timezone.now)
-    author = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='forum_answers')
-    # To make sure that someone who answers cannot vote
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='forum_answers')
     is_replied = models.BooleanField(default=True)
-    # If we delete a question the answers go away
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    evaluations = models.ForeignKey(Evaluation, on_delete=models.CASCADE, related_name='assessment_answers', null=True, blank=True)
+    topics = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='forum_answers', null=True, blank=True)
+
     @property
     def number_of_votes(self):
-        """
-            Return the number of vote for a answer
-        """
         return self.votes.count()
     
     def delete(self):
         self.delete_at = timezone.now()
         self.save()
+
 
 class Comment(models.Model):
     """

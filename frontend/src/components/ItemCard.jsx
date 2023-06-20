@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 const ItemCard = ({ evaluation }) => {
 
   console.log(evaluation);
-
+  const router = useRouter()
   const [showOptions, setShowOptions] = useState(false);
   const cardRef = useRef(null);
 
@@ -30,9 +31,15 @@ const ItemCard = ({ evaluation }) => {
   // Formated date
   const evaluationFormatDate = new Date(evaluation.create_at).toLocaleString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: false});
 
+  const handleItemOnClick = () => {
+    console.log(evaluation.id);
+
+    router.push('evaluation/' + evaluation.id);
+  }
+
   return (
     <>
-      <article ref={cardRef} aria-labelledby={evaluation.id} className="w-4/5 m-20 border border-gray-200 hover:bg-white p-10">
+      <article ref={cardRef} aria-labelledby={evaluation.id} onClick={handleItemOnClick} className="w-4/5 m-20 border border-gray-200 hover:bg-white p-10">
         <div>
           <div class="flex space-x-3">
             <div class="flex-shrink-0">

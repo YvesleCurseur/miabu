@@ -13,7 +13,6 @@ import { useRouter } from 'next/navigation';
 import { createEvaluation } from '../api/assessment/route';
 import { useSession } from 'next-auth/react';
 
-
 const CreateTopic = () => {
   const router = useRouter();
   

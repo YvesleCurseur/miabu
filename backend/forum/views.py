@@ -11,7 +11,8 @@ from rest_framework.decorators import api_view
 from forum.serializers import TopicSerializer, AnswerSerializer
 
 from forum.models import Topic, Answer
-from assessment.models import Establishment, Course, Domain, Level
+from assessment.models import Establishment
+
 
 
 
@@ -140,7 +141,19 @@ class CreateAnswerView(generics.CreateAPIView):
         Want: 'title', 'content', 'author', 'status'
     """
     serializer_class = AnswerSerializer
-    pass
+
+    # def perform_create(self, serializer):
+    #     topic_id = self.kwargs.get('topic_id')  # Récupérer l'identifiant du topic depuis les paramètres d'URL
+    #     evaluation_id = self.kwargs.get('evaluation_id')  # Récupérer l'identifiant de l'évaluation depuis les paramètres d'URL
+
+    #     if topic_id:
+    #         topic = Topic.objects.get(id=topic_id)
+    #         serializer.save(topic=topic)  # Associer la réponse au topic
+    #     elif evaluation_id:
+    #         evaluation = Evaluation.objects.get(id=evaluation_id)
+    #         serializer.save(evaluation=evaluation)  # Associer la réponse à l'évaluation
+    #     else:
+    #         serializer.save()
 
 # Détail d'une Answer
 class ReadAnswerView(generics.DestroyAPIView):
