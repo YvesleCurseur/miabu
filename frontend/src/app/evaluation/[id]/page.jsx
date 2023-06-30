@@ -16,7 +16,7 @@ const Page = ({ params }) => {
       setEvaluationDetail(response)
     })
 
-    console.log(evaluationDetail)
+    console.log(evaluationDetail.answers)
   }, [])
 
   return (
@@ -77,7 +77,7 @@ const Page = ({ params }) => {
                 {evaluationDetail.content}
               </div>
               <Answer 
-                answerData={evaluationDetail.answer}
+                answerData={evaluationDetail.answers}
                 evaluationId={params.id}
                 userId={userId}
               />

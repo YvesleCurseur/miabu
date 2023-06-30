@@ -6,7 +6,9 @@ export const HELLO_WORLD = URL + "v1/hello-world/"
 //Create a Evaluation
 export const CREATE_EVALUATION = URL + "v1/assessment/add-evaluation/"
 export const GET_LIST_EVALUATION = URL + "v1/assessment/evaluations/"
-export const GET_DETAIL_EVALUATION = URL + "v1/assessment/evaluation/"  
+export const GET_DETAIL_EVALUATION = URL + "v1/assessment/evaluation/"
+export const DOWNLOAD_EVALUATION_PDF = URL + "v1/assessment/download-pdf/"
+export const DOWNLOAD_EVALUATION_WORD = URL + "v1/assessment/download-word/"  
 
 // Answer
 export const CREATE_ANSWER = URL + "v1/forum/add-answer/"

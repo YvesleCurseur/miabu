@@ -17,7 +17,7 @@ const Answer = ({ evaluationId, userId, answerData }) => {
         e.preventDefault();
 
         const commentInfos = {
-            evaluation: evaluationId,
+            evaluations: evaluationId,
             author: userId,
             content: content
         }

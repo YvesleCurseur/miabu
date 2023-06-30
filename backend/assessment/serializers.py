@@ -69,3 +69,7 @@ class EvaluationDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Evaluation
         fields = ['id', 'title', 'content', 'author', 'status', 'year', 'establishment', 'level', 'course', 'domain', 'media', 'image', 'create_at', 'last_update_at', 'answers']
+
+class FileSerializer(serializers.Serializer):
+    text = serializers.CharField(required=False, allow_null=True)
+    filename = serializers.CharField(required=False, allow_null=True)
