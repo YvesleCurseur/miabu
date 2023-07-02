@@ -1,13 +1,16 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from 'next-auth/react';
+import { useDispatch } from "react-redux";
 
+import { setShouldRefresh } from "@/features/refresh/refreshSlice";
 import createAnswer from "@/app/api/answer/route";
 
 const Answer = ({ evaluationId, userId, answerData }) => {
 
     const { data: session } = useSession();
     const [content, setContent] = useState("");
+    const dispatch = useDispatch();
 
     console.log("evaluationId", evaluationId);
     console.log("userId", userId);
@@ -16,13 +19,17 @@ const Answer = ({ evaluationId, userId, answerData }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const commentInfos = {
-            evaluations: evaluationId,
-            author: userId,
-            content: content
-        }
+        if (content) {
+            const commentInfos = {
+                evaluations: evaluationId,
+                author: userId,
+                content: content
+            }
 
-        await createAnswer(commentInfos);
+            await createAnswer(commentInfos);
+            await dispatch(setShouldRefresh(true));
+            setContent('');
+        }
     }
     
     return (
@@ -82,10 +89,17 @@ const Answer = ({ evaluationId, userId, answerData }) => {
                             </div>
                         </div>
                         <div class="min-w-0 flex-1">
-                            <form action="#">
+                            <form onSubmit={handleSubmit}>
                             <div>
                                 <label for="comment" class="sr-only">Commenter</label>
-                                <textarea id="comment" name="comment" rows="3" class="shadow-sm block w-full focus:ring-gray-900 focus:border-gray-900 sm:text-sm border border-gray-300 rounded-md" placeholder="Laisser un commentaire" onChange={(e) => setContent(e.target.value)}></textarea>
+                                <textarea 
+                                    id="comment" 
+                                    name="comment" 
+                                    rows="3" 
+                                    class="shadow-sm block w-full focus:ring-gray-900 focus:border-gray-900 sm:text-sm border border-gray-300 rounded-md" placeholder="Laisser un commentaire" 
+                                    onChange={(e) => setContent(e.target.value)}
+                                >
+                                </textarea>
                             </div>
                             <div class="mt-6 flex items-center justify-end space-x-4">
                                 {/* <button type="button" class="inline-flex justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900">
@@ -94,7 +108,7 @@ const Answer = ({ evaluationId, userId, answerData }) => {
                                 </svg>
                                 <span>Close issue</span>
                                 </button> */}
-                                <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-900 hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900" onClick={handleSubmit}>Commenter</button>
+                                <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-900 hover:bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900" disabled={!content.trim()}>Commenter</button>
                             </div>
                             </form>
                         </div>

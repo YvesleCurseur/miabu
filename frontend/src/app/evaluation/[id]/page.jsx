@@ -2,7 +2,9 @@
 
 import { getDetailEvaluation } from "@/app/api/assessment/route";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
+import { setShouldRefresh } from "@/features/refresh/refreshSlice";
 import Answer from "@/components/Answer";
 import Cookies from "js-cookie";
 
@@ -10,14 +12,24 @@ const Page = ({ params }) => {
 
   const [evaluationDetail, setEvaluationDetail] = useState({})
   const userId = Cookies.get("ID_MIABU")
+
+  const shouldRefresh = useSelector((state) => state.refresh.shouldRefresh);
+  const dispatch = useDispatch()
   
   useEffect(() => {
     getDetailEvaluation(params.id).then((response) => {
       setEvaluationDetail(response)
-    })
+    }) 
+      
+    if (shouldRefresh) {
+      getDetailEvaluation(params.id).then((response) => {
+        setEvaluationDetail(response)
+      }) 
+      dispatch(setShouldRefresh(false));
+    }
 
     console.log(evaluationDetail.answers)
-  }, [])
+  }, [shouldRefresh, params.id, dispatch])
 
   return (
     <main class="flex-1">

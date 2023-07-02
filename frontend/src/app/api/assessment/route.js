@@ -4,7 +4,9 @@ import {
     GET_LIST_EVALUATION, 
     GET_DETAIL_EVALUATION, 
     DOWNLOAD_EVALUATION_PDF,
-    DOWNLOAD_EVALUATION_WORD
+    DOWNLOAD_EVALUATION_WORD,
+    LIKE_EVALUATION,
+    DELETE_LIKE_EVALUATION
 } from '..'
 
 function createEvaluation(data) {
@@ -88,10 +90,40 @@ function downloadEvaluationWord(data) {
     });
 }
 
+function likeEvaluation(data) {
+  return axios
+      .post(LIKE_EVALUATION, data)
+      .then((response) => {
+          const data = response.data; // Extracts the response data
+          console.log(data); // Logs the response data to the console
+          return data; // Returns the response data
+      })
+      .catch((error) => {
+          console.error(error); // Logs the error to the console
+          throw error; // Throws the error to be caught by the caller
+      });
+}
+
+function deleteLikeEvaluation(data) {
+  return axios
+      .post(DELETE_LIKE_EVALUATION + data.id + '/delete', data)
+      .then((response) => {
+          const data = response.data; // Extracts the response data
+          console.log(data); // Logs the response data to the console
+          return data; // Returns the response data
+      })
+      .catch((error) => {
+          console.error(error); // Logs the error to the console
+          throw error; // Throws the error to be caught by the caller
+      });
+}
+
 export { 
     createEvaluation, 
     getListEvaluation, 
     getDetailEvaluation,
     downloadEvaluationPdf,
     downloadEvaluationWord,
+    likeEvaluation,
+    deleteLikeEvaluation
 }
