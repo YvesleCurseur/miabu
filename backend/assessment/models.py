@@ -13,6 +13,9 @@ OPTIONS = (
         ('draft', 'Draft'),
         ('publish', 'Publish'),
     )
+
+
+
 # Models for establishment
 class Establishment(models.Model):
     name = models.CharField(max_length=100)
@@ -74,5 +77,15 @@ class Evaluation(models.Model):
     establishment = models.ForeignKey(Establishment, on_delete=models.SET_NULL, related_name='assessment_evaluations', null=True)
     year = models.CharField(max_length=100)
     # answer = models.ManyToManyField(Answer, blank=True)
+
     def __str__(self):
         return self.title
+
+class Like(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    evaluation = models.ForeignKey(Evaluation, on_delete=models.CASCADE, null=True, blank=True)
+    # topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Like by {self.user.username}"

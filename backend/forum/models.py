@@ -4,10 +4,12 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from django.utils.text import slugify
-from ressource.models import Media
+from django.contrib.contenttypes.fields import GenericRelation
+
 from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
-from assessment.models import Course, Domain, Level, Establishment, Evaluation
+from ressource.models import Media
+from assessment.models import Course, Domain, Level, Establishment, Evaluation, Like
 
 OPTIONS = (
         ('draft', 'Draft'),
@@ -64,6 +66,7 @@ class Topic(models.Model):
     objects = models.Manager()  
     # Custom manager
     topic_objects = TopicObjects()  
+    likes = GenericRelation(Like)
 
     def __str__(self):
         return self.title

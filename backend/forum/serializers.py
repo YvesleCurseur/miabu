@@ -21,4 +21,4 @@ class AnswerDetailSerializer(serializers.ModelSerializer):
     author = UserDetailSerializer()
     class Meta:
         model = Answer
-        fields = ['id', 'content', 'author', 'evaluations']
+        fields = ['id', 'content', 'author', 'evaluations', 'create_at']    

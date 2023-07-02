@@ -2,9 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import ReactHtmlParser from 'react-html-parser';
 import { convert } from 'html-to-text';
-
 
 import { deleteLikeEvaluation, downloadEvaluationPdf, downloadEvaluationWord, likeEvaluation } from "@/app/api/assessment/route";
 import { getLikesListUser } from "@/app/api/user/route";
@@ -132,7 +130,7 @@ const ItemCard = ({ evaluation, userId, likedByUserData }) => {
                 </a>
               </p>
             </div>
-            <div class="flex-shrink-0 self-center flex">
+            {/* <div class="flex-shrink-0 self-center flex">
               <div class="relative inline-block text-left">
                 <div>
                   <button 
@@ -149,18 +147,18 @@ const ItemCard = ({ evaluation, userId, likedByUserData }) => {
 
                     {/* <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                       <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                    </svg> */}
+                    </svg> 
                   </button>
                 </div>
                 {showOptions && (
                 <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-0-button" tabindex="-1">
                   <div class="py-1" role="none">
-                    {/* <a href="#" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-0" onClick={handleDownPdfClick}>
+                    <a href="#" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-0" onClick={handleDownPdfClick}>
                       <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                       </svg>
                       <span>PDF</span>
-                    </a> */}
+                    </a>
                     <a href="#" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-1" onClick={handleDownWordClick}>
                       <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                         <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -171,12 +169,12 @@ const ItemCard = ({ evaluation, userId, likedByUserData }) => {
                 </div>
                 )}
               </div>
-            </div>
+            </div> */}
           </div>
           <h2 id={evaluation.id} onClick={handleItemOnClick} class="mt-4 text-base font-medium text-gray-900">{evaluation.title}</h2>
         </div>
-        <div class="mt-2 text-sm text-gray-700 space-y-4">
-          <p className="whitespace-pre-line line-clamp-3">{ReactHtmlParser(evaluation.content)}</p>
+        <div class="mt-2 text-sm text-gray-700 space-y-4" onClick={handleItemOnClick}>
+          <p className="whitespace-pre-line line-clamp-3">{convert(evaluation.content)}</p>
         </div>
         <div class="mt-6 flex justify-end space-x-8">
           <div class="flex space-x-6">
@@ -195,7 +193,7 @@ const ItemCard = ({ evaluation, userId, likedByUserData }) => {
                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
                 </svg>
-                <span class="font-medium text-gray-400">11</span>  
+                <span class="font-medium text-gray-400">{evaluation.answers.length}</span>  
                 <span class="sr-only">replies</span>
               </button>
             </span>

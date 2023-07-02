@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from assessment.models import Evaluation, Establishment, Course, Domain, Level
+from assessment.models import Evaluation, Establishment, Course, Domain, Level, Like
 from user.serializers import UserDetailSerializer
 from forum.serializers import AnswerSerializer, AnswerDetailSerializer
 
@@ -73,3 +73,11 @@ class EvaluationDetailSerializer(serializers.ModelSerializer):
 class FileSerializer(serializers.Serializer):
     text = serializers.CharField(required=False, allow_null=True)
     filename = serializers.CharField(required=False, allow_null=True)
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = ('id', 'user', 'evaluation')
+
+class LikeUserIdSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
