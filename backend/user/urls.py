@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CustomUserCreate, BlacklistTokenUpdateView, FacebookLogin, GoogleLogin, CustomUserListView, LoginUserView, UserDetailView
+from .views import CustomUserCreate, FacebookLogin, GoogleLogin, CustomUserListView, LoginUserView, UserDetailView, UserLikesAPIView
 
 from dj_rest_auth.registration.views import SocialLoginView
 
@@ -17,6 +17,8 @@ urlpatterns = [
     # social auth
     path('rest-auth/facebook/', GoogleLogin.as_view(), name='facebook_auth'),
     path('rest-auth/google/', FacebookLogin.as_view(), name='google_auth'),
+    path('likes/', UserLikesAPIView.as_view(), name='user_likes'),
+
     # path('rest-auth/', include('rest_auth.urls')),
     # path('rest-auth/registration/', include('rest_auth.registration.urls')),
 ]

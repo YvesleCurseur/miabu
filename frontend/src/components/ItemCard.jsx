@@ -1,15 +1,32 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { convert } from 'html-to-text';
 
-const ItemCard = ({ evaluation }) => {
+import { deleteLikeEvaluation, downloadEvaluationPdf, downloadEvaluationWord, likeEvaluation } from "@/app/api/assessment/route";
+import { getLikesListUser } from "@/app/api/user/route";
+
+
+
+const ItemCard = ({ evaluation, userId, likedByUserData }) => {
+
+  console.log(likedByUserData)
+
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  
+  const filenamePDF = evaluation.title.replace(/\s+/g, '_').toLowerCase() + '.pdf';
+  const filenameWord = evaluation.title.replace(/\s+/g, '_').toLowerCase() + '.docx';
 
   console.log(evaluation);
-
+  const router = useRouter()
   const [showOptions, setShowOptions] = useState(false);
   const cardRef = useRef(null);
 
   useEffect(() => {
+    fetchLikeStatus();
+    
     const handleClickOutside = (event) => {
       if (cardRef.current && !cardRef.current.contains(event.target)) {
         setShowOptions(false);
@@ -30,9 +47,69 @@ const ItemCard = ({ evaluation }) => {
   // Formated date
   const evaluationFormatDate = new Date(evaluation.create_at).toLocaleString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: false});
 
+  const handleItemOnClick = () => {
+    console.log(evaluation.id);
+
+    router.push('evaluation/' + evaluation.id);
+  }
+
+  const handleDownPdfClick = () => {
+    const pdfData = {
+      text: evaluation.content,
+      filename: filenamePDF
+    };
+    downloadEvaluationPdf(pdfData);
+  }
+
+  const handleDownWordClick = () => {
+    const evalutionTexte = convert(evaluation.content);
+
+    const wordData = {
+      text: evalutionTexte,
+      filename: filenameWord
+    }
+    downloadEvaluationWord(wordData);
+  }
+
+  const handleLikeClick = async () => {
+    const data = {
+      user: userId,
+      evaluation: evaluation.id
+    }
+
+    try {
+      if (isLiked) {
+        // Si déjà liké, supprimer le like
+        await deleteLikeEvaluation(likedByUserData.id);
+        setIsLiked(false);
+        // setLikeCount(prevCount => prevCount - 1);
+      } else {
+        // Sinon, ajouter le like
+        await likeEvaluation(data);
+        setIsLiked(true);
+        // setLikeCount(prevCount => prevCount + 1);
+      }
+    } catch (error) {
+      console.error('Une erreur s\'est produite lors de la gestion du like:', error);
+    }
+  };
+
+  const fetchLikeStatus = async () => {
+    try {
+      const response = getLikesListUser(userId);
+      const likedByUser = response.data;
+      console.log(likedByUser)
+
+      setIsLiked(true);
+      // setLikeCount(likes.length);
+    } catch (error) {
+      console.error('Une erreur s\'est produite lors de la récupération de l\'état du like:', error);
+    }
+  };
+
   return (
     <>
-      <article ref={cardRef} aria-labelledby={evaluation.id} className="w-4/5 m-20 border border-gray-200 hover:bg-white p-10">
+      <article ref={cardRef} aria-labelledby={evaluation.id} className="w-[100%] m-20 border border-gray-200 hover:bg-white p-10 cursor-pointer">
         <div>
           <div class="flex space-x-3">
             <div class="flex-shrink-0">
@@ -53,7 +130,7 @@ const ItemCard = ({ evaluation }) => {
                 </a>
               </p>
             </div>
-            <div class="flex-shrink-0 self-center flex">
+            {/* <div class="flex-shrink-0 self-center flex">
               <div class="relative inline-block text-left">
                 <div>
                   <button 
@@ -62,68 +139,65 @@ const ItemCard = ({ evaluation }) => {
                     id="options-menu-0-button"
                     aria-expanded={showOptions}
                     aria-haspopup="true"
-                    onClick={handleOptionsClick}
+                    // onClick={handleOptionsClick}
+                    onClick={handleDownWordClick}
                   >
                     <span class="sr-only">Open options</span>
-                    Télécharger
+                    Téléchargez
 
-                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    {/* <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                       <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                    </svg>
+                    </svg> 
                   </button>
                 </div>
                 {showOptions && (
                 <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-0-button" tabindex="-1">
                   <div class="py-1" role="none">
-                    <a href="#" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-0">
+                    <a href="#" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-0" onClick={handleDownPdfClick}>
                       <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                       </svg>
                       <span>PDF</span>
                     </a>
-                    <a href="#" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-1">
+                    <a href="#" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-1" onClick={handleDownWordClick}>
                       <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                         <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
                       </svg>
                       <span>Word</span>
                     </a>
-                    <a href="#" class="text-gray-700 flex px-4 py-2 text-sm" role="menuitem" tabindex="-1" id="options-menu-0-item-2">
-                      <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M3 6a3 3 0 013-3h10a1 1 0 01.8 1.6L14.25 8l2.55 3.4A1 1 0 0116 13H6a1 1 0 00-1 1v3a1 1 0 11-2 0V6z" clip-rule="evenodd" />
-                      </svg>
-                      <span>PWP</span>
-                    </a>
                   </div>
                 </div>
                 )}
               </div>
-            </div>
+            </div> */}
           </div>
-          <h2 id={evaluation.id} class="mt-4 text-base font-medium text-gray-900">{evaluation.title}</h2>
+          <h2 id={evaluation.id} onClick={handleItemOnClick} class="mt-4 text-base font-medium text-gray-900">{evaluation.title}</h2>
         </div>
-        <div class="mt-2 text-sm text-gray-700 space-y-4">
-          <p className="whitespace-pre-line line-clamp-3">{evaluation.content}</p>
+        <div class="mt-2 text-sm text-gray-700 space-y-4" onClick={handleItemOnClick}>
+          <p className="whitespace-pre-line line-clamp-3">{convert(evaluation.content)}</p>
         </div>
-        <div class="mt-6 flex justify-between space-x-8">
+        <div class="mt-6 flex justify-end space-x-8">
           <div class="flex space-x-6">
-            <span class="inline-flex items-center text-sm">
-              <button type="button" class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
+            {/* <span class="inline-flex items-center text-sm">
+              <button type="button" className={`inline-flex space-x-2 text-${isLiked ? 'red' : 'gray'}-500 hover:text-${isLiked ? 'red' : 'gray'}-100`} onClick={handleLikeClick}>
                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
                 </svg>
                 <span class="font-medium text-gray-900">29</span>
                 <span class="sr-only">likes</span>
               </button>
-            </span>
+            </span> */}
             <span class="inline-flex items-center text-sm">
-              <button type="button" class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
+              <button type="button" class="inline-flex space-x-2 text-gray-400 hover:text-gray-500" onClick={handleItemOnClick}>
+                
                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
                 </svg>
-                <span class="font-medium text-gray-900">11</span>
+                <span class="font-medium text-gray-400">{evaluation.answers.length}</span>  
                 <span class="sr-only">replies</span>
               </button>
             </span>
+            {/* 
             <span class="inline-flex items-center text-sm">
               <button type="button" class="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -133,7 +207,8 @@ const ItemCard = ({ evaluation }) => {
                 <span class="font-medium text-gray-900">2.7k</span>
                 <span class="sr-only">views</span>
               </button>
-            </span>
+            </span> 
+            */}
           </div>
           {/* <div class="flex text-sm">
             <span class="inline-flex items-center text-sm">

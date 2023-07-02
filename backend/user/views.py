@@ -9,9 +9,14 @@ from rest_framework.permissions import AllowAny
 from dj_rest_auth.registration.views import SocialLoginView
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from django.contrib.contenttypes.models import ContentType
 
 from user.models import NewUser
 
+from assessment.models import Evaluation, Like
+from assessment.serializers import EvaluationSerializer, LikeSerializer, LikeUserIdSerializer
+from forum.models import Topic
+from forum.serializers import TopicSerializer
 from .serializers import CustomUserSerializer, LoginUserSerializer, EmailSerializer
 
 # Pour se connecter
@@ -103,4 +108,29 @@ class UserDetailView(GenericAPIView):
                 return Response({'message': 'Utilisateur non trouvé'}, status=status.HTTP_404_NOT_FOUND)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+# class LikedItemsView(APIView):
+#     def get(self, request, user_id):
+#         user = get_object_or_404(User, id=user_id)
+#         likes = Like.objects.filter(user=user)
+#         serializer = LikeSerializer(likes, many=True)
+#         return Response(serializer.data)
 
+from rest_framework.generics import GenericAPIView
+from rest_framework.response import Response
+
+class UserLikesAPIView(GenericAPIView):
+    serializer_class = LikeUserIdSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user_id = serializer.validated_data['user_id']
+        # Récupérer les likes de l'utilisateur pour l'élément spécifique
+        likes = Like.objects.filter(user=user_id)
+        
+        # Sérialiser les likes
+        serializer = LikeSerializer(likes, many=True)
+        
+        return Response(serializer.data)
