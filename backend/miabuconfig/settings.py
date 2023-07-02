@@ -242,16 +242,16 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-# import cloudinary
-# import cloudinary_storage
-# cloudinary.config( 
-#   cloud_name = "dvmkojfzr", 
-#   api_key = "344368124351159", 
-#   api_secret = "NPLoUVdwHkpsN_nTwTLiukYFQ78",
-#   api_proxy = "http://proxy.server:3128"
-# )
-# import cloudinary.uploader
-# import cloudinary.api
+import cloudinary
+import cloudinary_storage
+cloudinary.config( 
+  cloud_name = "dvmkojfzr", 
+  api_key = "344368124351159", 
+  api_secret = "NPLoUVdwHkpsN_nTwTLiukYFQ78",
+  api_proxy = "http://proxy.server:3128"
+)
+import cloudinary.uploader
+import cloudinary.api
 
 # Configure Cloudinary storage
 CLOUDINARY_STORAGE = {
