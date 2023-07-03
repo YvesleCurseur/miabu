@@ -12,7 +12,6 @@ const Answer = ({ evaluationId, userId, answerData }) => {
 
     moment.locale('fr');
 
-
     const { data: session } = useSession();
     const [content, setContent] = useState("");
     const dispatch = useDispatch();
@@ -33,7 +32,7 @@ const Answer = ({ evaluationId, userId, answerData }) => {
 
             await createAnswer(commentInfos);
             await dispatch(setShouldRefresh(true));
-            setContent('');
+            setContent("");
         }
     }
     
@@ -69,6 +68,7 @@ const Answer = ({ evaluationId, userId, answerData }) => {
                                         rows="3" 
                                         class="block w-full h-auto p-2.5 bg-white shadow-sm placeholder-gray-400 focus:outline-none focus:ring-rose-600 focus:border-rose-600 preserve-indent border border-gray-300" placeholder="Laissez un commentaire" 
                                         onChange={(e) => setContent(e.target.value)}
+                                        value={content}
                                     >
                                     </textarea>
                                 </div>
@@ -115,7 +115,7 @@ const Answer = ({ evaluationId, userId, answerData }) => {
                                         <div className="text-sm">
                                         <a href="#" className="font-medium text-gray-900">{answer.author.username}</a>
                                         </div>
-                                        <p className="mt-0.5 text-sm text-gray-500">Commenté {moment(answer.author.create_at).fromNow()}</p>
+                                        <p className="mt-0.5 text-sm text-gray-500">Commenté {moment(answer.create_at).fromNow()}</p>
                                     </div>
                                     <div className="mt-2 text-sm text-gray-700">
                                         <p>{answer.content}</p>
