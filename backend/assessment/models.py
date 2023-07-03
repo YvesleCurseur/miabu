@@ -80,6 +80,9 @@ class Evaluation(models.Model):
 
     def __str__(self):
         return self.title
+    
+    class Meta:
+        ordering = ['-create_at']
 
 class Like(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
