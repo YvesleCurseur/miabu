@@ -29,7 +29,7 @@ class CreateEvaluationView(generics.CreateAPIView):
     serializer_class = EvaluationSerializer
 
 class GetEvaluationsView(generics.ListAPIView):
-    queryset = Evaluation.objects.filter(status='publish')
+    queryset = Evaluation.objects.filter(status='publish').order_by('-create_at')
     serializer_class = EvaluationDetailSerializer
 
 class GetEvaluationByIdView(generics.RetrieveAPIView):
@@ -184,7 +184,7 @@ class LikeDestroyAPIView(DestroyAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class EvaluationSearchView(generics.ListAPIView):
-    queryset = Evaluation.objects.filter(status='publish')
+    queryset = Evaluation.objects.filter(status='publish').order_by('-create_at')
     serializer_class = EvaluationDetailSerializer
 
     def get_queryset(self):
