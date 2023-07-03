@@ -114,6 +114,13 @@ class Answer(models.Model):
         self.delete_at = timezone.now()
         self.save()
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['author']),
+            models.Index(fields=['evaluations']),
+            models.Index(fields=['topics']),
+        ]
+
 
 class Comment(models.Model):
     """

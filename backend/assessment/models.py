@@ -1,20 +1,13 @@
 from django.db import models
-
-# Create your models here.
-
 from django.conf import settings
 from django.utils import timezone
 
 from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
-
-
 OPTIONS = (
         ('draft', 'Draft'),
         ('publish', 'Publish'),
     )
-
-
 
 # Models for establishment
 class Establishment(models.Model):
@@ -27,7 +20,11 @@ class Establishment(models.Model):
     # Return the name of the establishment by default
     def __str__(self):
         return self.name
-
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['name']),
+        ]
 
 # Models for course
 class Course(models.Model):
@@ -38,7 +35,11 @@ class Course(models.Model):
 
     def __str__(self):
         return self.name
-
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['name']),
+        ]
 
 # Models for domain
 class Domain(models.Model):
@@ -46,7 +47,11 @@ class Domain(models.Model):
 
     def __str__(self):
         return self.name
-
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['name']),
+        ]
 
 # Models for level
 class Level(models.Model):
@@ -54,6 +59,12 @@ class Level(models.Model):
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['name']),
+        ]
+
 class Evaluation(models.Model):
     # Fields from Topic model
     title = models.CharField(max_length=150)
@@ -83,6 +94,19 @@ class Evaluation(models.Model):
     
     class Meta:
         ordering = ['-create_at']
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['title']),
+            models.Index(fields=['slug']),
+            models.Index(fields=['content']),
+            models.Index(fields=['author']),
+            models.Index(fields=['status']),
+            models.Index(fields=['level']),
+            models.Index(fields=['domain']),
+            models.Index(fields=['course']),
+            models.Index(fields=['establishment']),
+        ]
 
 class Like(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
