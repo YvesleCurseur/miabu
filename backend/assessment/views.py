@@ -12,7 +12,10 @@ from docx import Document
 from django.shortcuts import get_object_or_404
 # import genericapiview
 from rest_framework.generics import GenericAPIView
-
+from rest_framework import status
+from rest_framework.generics import DestroyAPIView
+from rest_framework.response import Response
+from django.db.models import Q  
 from assessment.models import Evaluation, Like
 from assessment.serializers import EvaluationSerializer, EvaluationDetailSerializer, FileSerializer, LikeSerializer
 
@@ -159,11 +162,7 @@ class LikeCreateAPIView(generics.CreateAPIView):
         self.perform_create(serializer)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
-from rest_framework import status
-from rest_framework.generics import DestroyAPIView
-from rest_framework.response import Response
-    
+
 class LikeDestroyAPIView(DestroyAPIView):
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
@@ -183,3 +182,24 @@ class LikeDestroyAPIView(DestroyAPIView):
         self.perform_destroy(like)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class EvaluationSearchView(generics.ListAPIView):
+    queryset = Evaluation.objects.filter(status='publish')
+    serializer_class = EvaluationDetailSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.query_params.get('search', None)
+
+        if search_query:
+            queryset = queryset.filter(
+                Q(slug__icontains=search_query) |
+                Q(title__icontains=search_query) |
+                Q(level__name__icontains=search_query) |
+                Q(domain__name__icontains=search_query) |
+                Q(course__name__icontains=search_query) |
+                Q(establishment__name__icontains=search_query) |
+                Q(content__icontains=search_query)
+            )
+
+        return queryset

@@ -10,7 +10,8 @@ export const GET_DETAIL_EVALUATION = URL + "v1/assessment/evaluation/"
 export const DOWNLOAD_EVALUATION_PDF = URL + "v1/assessment/download-pdf/"
 export const DOWNLOAD_EVALUATION_WORD = URL + "v1/assessment/download-word/"
 export const LIKE_EVALUATION = URL + "v1/assessment/likes/create/"
-export const DELETE_LIKE_EVALUATION = URL + "v1/assessment/likes/"    
+export const DELETE_LIKE_EVALUATION = URL + "v1/assessment/likes/"
+export const SEARCH_EVALUATION = URL + "v1/assessment/evaluation/"    
 
 // Answer
 export const CREATE_ANSWER = URL + "v1/forum/add-answer/"
