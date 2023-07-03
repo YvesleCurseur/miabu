@@ -113,12 +113,13 @@ const ItemCard = ({ evaluation, userId, likedByUserData }) => {
         <div>
           <div class="flex space-x-3">
             <div class="flex-shrink-0">
-              {evaluation.author.profile_picture ? 
-                <img class="h-10 w-10 rounded-full" src={evaluation.author.profile_picture} alt={evaluation.author.username} /> :
+              {evaluation.author.profile_picture ? (
+                <img class="h-10 w-10 rounded-full" src={evaluation.author.profile_picture} alt={evaluation.author.username} />
+              ) : (
                 <p className="font-bold h-10 w-10 flex items-center justify-center rounded-full bg-black text-white text-center">
-                  {evaluation.author.username.substr(0, 2).toUpperCase()}
-                </p>              
-              }
+                  {evaluation.author?.username?.substr(0, 2).toUpperCase()}
+                </p>
+              )}
             </div>
             <div class="min-w-0 flex-1">
               <p class="text-sm font-medium text-gray-900">
@@ -193,7 +194,7 @@ const ItemCard = ({ evaluation, userId, likedByUserData }) => {
                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
                 </svg>
-                <span class="font-medium text-gray-400">{evaluation.answers.length}</span>  
+                <span class="font-medium text-gray-400">{evaluation?.answers?.length}</span>  
                 <span class="sr-only">replies</span>
               </button>
             </span>
