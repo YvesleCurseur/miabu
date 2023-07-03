@@ -106,6 +106,10 @@ class Answer(models.Model):
     def number_of_votes(self):
         return self.votes.count()
     
+    # order by create_at
+    class Meta:
+        ordering = ['-create_at']
+    
     def delete(self):
         self.delete_at = timezone.now()
         self.save()

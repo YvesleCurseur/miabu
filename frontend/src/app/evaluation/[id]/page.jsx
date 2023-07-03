@@ -22,7 +22,7 @@ const Page = ({ params }) => {
     getDetailEvaluation(params.id).then((response) => {
       setEvaluationDetail(response)
     }) 
-  })
+  }, [])
 
   useEffect(() => {
     if (shouldRefresh) {

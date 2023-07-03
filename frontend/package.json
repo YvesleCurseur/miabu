@@ -13,7 +13,6 @@
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
-    "dompurify": "^3.0.4",
     "html-to-text": "^9.0.5",
     "js-cookie": "^3.0.5",
     "moment": "^2.29.4",
