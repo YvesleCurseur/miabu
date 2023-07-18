@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createWorker }  from 'tesseract.js'
 
 import CloseSvg from "../../public/icons/CloseSvg";
+import PopUp from "./PopUp";
 
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
@@ -39,6 +40,7 @@ const ImageToText = (props) => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [textResult, setTextResult] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
 
   /* Ajout d'image */
   const handleFileChange = (e) => {
@@ -47,7 +49,6 @@ const ImageToText = (props) => {
     const allowedTypes = [
       "image/jpeg", 
       "image/png", 
-      "application/pdf", 
       "application/msword", 
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ];
@@ -62,6 +63,7 @@ const ImageToText = (props) => {
   
     if (invalidFiles.length > 0) {
       setError("Le fichier doit être de type JPEG, PNG, GIF, PDF, DOC ou TXT");
+      setShowPopup(true);
       return;
     }
   
@@ -96,6 +98,7 @@ const ImageToText = (props) => {
   const getTextFromImage = async () => {
 
     if (files.length === 0) {
+      setShowPopup(true);
       setError("Aucune image à transcrire");
       return;
     }
@@ -131,23 +134,36 @@ const ImageToText = (props) => {
   
     setTextResult(text);
     props.onImageFromText(text);
+    // if (files.length > 1) {
+    //   console.log(files)
+    //   props.onImageUsed(files)
+    // }
     props.onImageUsed(file)
     setIsLoading(false)
 
     }
 
+    props.onImageUsed(files)
     props.onImageFromText(textResult)
 
   return (
 
     <>
+      {/* Ajouter une image */}
       <div className="mb-4">
+      <p className="border p-4 mb-4 border-gray-200 hover:bg-white cursor-help">
+          <u><strong>Étape 2</strong></u>: Ajouter des images ou un document Word<br/><br/>
+
+          En cliquant sur le bouton ci-dessous, vous pouvez ajouter plusieurs images simultanément, dans les formats acceptés tels que JPEG, PNG ou un document Word unique.
+      </p>
+
+
         <label
           htmlFor="inputImage"
           className="text-sm w-full px-3 py-2 text-white bg-rose-500 hover:bg-rose-600"
           style={{cursor:"pointer"}}
         >
-          {files.length > 0 ? "Ajouter d'autres images" : "Ajouter une image"}
+          Ajouter un fichier
         </label>
         <input
           type="file"
@@ -159,38 +175,11 @@ const ImageToText = (props) => {
         />
       </div>
 
-      <button 
-        id="retranscribe-btn" 
-        className="text-sm w-full px-3 py-2 mb-2 text-blue-500 bg-gray-200 hover:bg-gray-300"
-        type="button"
-        onClick={getTextFromImage}
-        disabled={files.length > 1}
-      >
-        {files.length > 1
-          ? "Désactiver"
-          : isLoading
-          ? "Chargement..."
-          : "Retranscrire"}
-      </button>
-
-      <ReactQuill
-        placeholder="Le texte de l'image s'afichera ici, vous pouvez le modifiez à votre guise"
-        modules={modules}
-        className="w-full h-auto bg-white border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none focus:ring-rose-600 focus:border-rose-600 preserve-indent"
-        id="outputText"
-        value={textResult || ""}
-        onChange={(value) => setTextResult(value)}
-      />
-
-      {error && (
-        <div className="bg-red-500 text-white px-4 py-2 rounded-md mb-4">
-          {error}
-        </div>
-      )}
-
+      {/* Affichage des images ajoutées */}
       <div className="flex flex-wrap -mx-2">
         {files.map((file, index) => (
           <div key={index} className="relative w-32 h-32 mx-2 my-2 mb-5">
+            {/* Affichage de l'image ou de l'icône de fichier selon le type */}
             {file.type.startsWith("image/") ? (
               <div>
                 <img 
@@ -199,17 +188,6 @@ const ImageToText = (props) => {
                   alt="Image preview" 
                   className="w-32 h-32 object-cover rounded-md images-container" 
                 />
-                <p className="text-sm truncate">{file.name}</p>
-              </div>
-            ) : file.type === "application/pdf" ? (
-              <div>
-                <div 
-                  className="w-32 h-32 bg-gray-200 rounded-md flex items-center justify-center"
-                >
-                  <span className="text-4xl text-gray-400">
-                    <i className="far fa-file-pdf"></i>
-                  </span>
-                </div>
                 <p className="text-sm truncate">{file.name}</p>
               </div>
             ) : file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ? (
@@ -237,16 +215,67 @@ const ImageToText = (props) => {
             ) : (
               null
             )}
+            {/* Bouton de suppression de l'image */}
             <div
               className="absolute top-0 right-0 cursor-pointer text-blue-500"
               onClick={() => handleRemoveFile(index)}
             >
-              Effacer
               <CloseSvg />
             </div>
-        </div>
+          </div>
         ))}
       </div>
+
+      <p className="border p-4 mb-4 border-gray-200 hover:bg-white cursor-help">
+          <u><strong>Étape 3</strong></u>: (facultative) De l'image au texte
+          <br/>
+          <br/>
+          Une fois que vous avez ajouté votre image, utilisez la fonctionnalité "Retranscrire" pour obtenir le texte contenu dans l'image. Elle permet d'extraire facilement le texte d'une image téléchargée. Veuillez noter que cette option sera désactivée si vous avez sélectionné plus d'une image ou un document Word.
+      </p>
+
+      {/* Bouton "Retranscrire" */}
+      {console.log(files)}
+      <button 
+        id="retranscribe-btn" 
+        className="text-sm w-full px-3 py-2 mb-2 text-blue-500 bg-gray-200 hover:bg-gray-300"
+        type="button"
+        onClick={getTextFromImage}
+        disabled={isLoading || files.length > 1 || (files.length === 1 && files[0]?.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document")} 
+        >
+        {files.length > 1
+          ? "Désactiver"
+          : isLoading
+          ? "Chargement..."
+          : "Retranscrire"}
+      </button>
+      
+      <p className="border p-4 mb-4 border-gray-200 hover:bg-white cursor-help">
+        <u><strong>Étape 4</strong></u>: (facultative) Texte retranscrit de l'image 
+        <br/>
+        <br/>
+        Le texte de l'image retranscrit s'affichera ici. Vous pouvez le modifier à votre guise en utilisant l'éditeur de texte ci-dessus. Cela vous permet de corriger ou d'améliorer le texte extrait si nécessaire.
+      </p>
+
+      {/* Éditeur de texte */}
+      <ReactQuill
+        placeholder="Le texte de l'image s'affichera ici, vous pouvez le modifier à votre guise"
+        modules={modules}
+        className="w-full h-auto bg-white border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none focus:ring-rose-600 focus:border-rose-600 preserve-indent"
+        id="outputText"
+        value={textResult || ""}
+        onChange={(value) => setTextResult(value)}
+      />
+      
+      {/* Affichage du message d'erreur */}
+      {showPopup && error && (
+        <PopUp 
+          type="error"
+          title="Erreur |"
+          message={error}
+          onClose={() => setShowPopup(false)}
+          duration={4000} // Le popup sera affiché pendant 4 secondes
+        />
+      )}
     </>
   );
 };

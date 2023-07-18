@@ -3,6 +3,8 @@ from django.conf import settings
 from django.utils import timezone
 
 from cloudinary_storage.storage import RawMediaCloudinaryStorage
+# from cloudinary.models import CloudinaryField
+from assessment.utils import get_activity_image_path
 
 OPTIONS = (
         ('draft', 'Draft'),
@@ -65,10 +67,13 @@ class Level(models.Model):
             models.Index(fields=['name']),
         ]
 
+class Image(models.Model):
+    image = models.ImageField(upload_to='images/', blank=True)
+
 class Evaluation(models.Model):
     # Fields from Topic model
     title = models.CharField(max_length=150)
-    content = models.TextField()
+    content = models.TextField(null=True, blank=True)
     slug = models.SlugField(max_length=1000, unique_for_date='publish_at')
     publish_at = models.DateTimeField(default=timezone.now)
     create_at = models.DateTimeField(default=timezone.now)
@@ -78,7 +83,7 @@ class Evaluation(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='assessment_evaluations')
     status = models.CharField(max_length=10, choices=OPTIONS, default='publish')
     media = models.FileField(upload_to='raw/', blank=True, storage=RawMediaCloudinaryStorage())
-    image = models.ImageField(upload_to='images/', blank=True)
+    images = models.ManyToManyField(Image, related_name='assessment_evaluations', blank=True)
 
     # Fields for assessment
     visits = models.PositiveIntegerField(default=0)
@@ -86,7 +91,7 @@ class Evaluation(models.Model):
     domain = models.ForeignKey(Domain, on_delete=models.CASCADE, related_name='assessment_evaluations', null=True)
     course = models.ForeignKey(Course, on_delete=models.SET_NULL, related_name='assessment_evaluations', null=True)
     establishment = models.ForeignKey(Establishment, on_delete=models.SET_NULL, related_name='assessment_evaluations', null=True)
-    year = models.CharField(max_length=100)
+    year = models.CharField(max_length=100, null=True, blank=True)
     # answer = models.ManyToManyField(Answer, blank=True)
 
     def __str__(self):

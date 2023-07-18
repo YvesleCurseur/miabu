@@ -109,7 +109,7 @@ const ItemCard = ({ evaluation, userId, likedByUserData }) => {
 
   return (
     <>
-      <article ref={cardRef} aria-labelledby={evaluation.id} className="w-[100%] m-20 border border-gray-200 hover:bg-white p-10 cursor-pointer">
+      <article ref={cardRef} aria-labelledby={evaluation.id} className="w-[100%] mx-auto m-20 border border-gray-200 hover:bg-white p-10 cursor-pointer">
         <div>
           <div class="flex space-x-3">
             <div class="flex-shrink-0">

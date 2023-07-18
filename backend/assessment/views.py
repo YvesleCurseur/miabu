@@ -22,11 +22,19 @@ from assessment.serializers import EvaluationSerializer, EvaluationDetailSeriali
 from user.models import NewUser
 
 class CreateEvaluationView(generics.CreateAPIView):
-    """
-        Get a specific Topic
-        Return: 'id', 'title', 'content', 'slug', 'create_at', 'author', 'status'
-    """
+
     serializer_class = EvaluationSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        images = request.FILES.getlist('images')
+
+        if serializer.is_valid():
+            evaluation = serializer.create_evaluation_with_images(serializer.validated_data, images)
+            # Autres actions à effectuer après la création de l'évaluation
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class GetEvaluationsView(generics.ListAPIView):
     queryset = Evaluation.objects.filter(status='publish').order_by('-create_at')
