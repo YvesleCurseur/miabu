@@ -6,6 +6,7 @@ import ItemCard from "./ItemCard";
 import { getListEvaluation, searchEvaluation } from "@/app/api/assessment/route";
 import SearchBar from "./SearchBar";
 import { useRouter } from 'next/navigation';
+import Loading from "./Loading";
 
 const EvaluationList = ({ data, userId, likedByUserData }) => {
 
@@ -85,8 +86,10 @@ const Feed = () => {
     router.push(`?search=${encodedQuery}`);
   
     try {
+      setIsLoading(true);
       const response = await searchEvaluation(query);
       setList(response.results);
+      setIsLoading(false);
     } catch (error) {
       console.error('Une erreur s\'est produite lors de la récupération des épreuves:', error);
     }
@@ -103,7 +106,9 @@ const Feed = () => {
     <>
       <SearchBar onSearch={handleSearch} />
       {isLoading ? (
-        <div>Loading</div>
+        <div className="mt-10">
+          <Loading />
+        </div>
       ) : (
         <EvaluationList data={displayList} userId={userId} likedByUserData={likedByUser} />
       )}
