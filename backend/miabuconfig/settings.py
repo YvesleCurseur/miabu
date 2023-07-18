@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,6 +21,10 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'miabususu.pythonanywhere.com']
 # Application definition
 
 INSTALLED_APPS = [
+    # Interface
+    'admin_interface',
+    'colorfield',
+    # Interface
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,6 +54,7 @@ INSTALLED_APPS = [
     # cloudinary
     'cloudinary_storage',
     'cloudinary',
+    
 ]
 
 MIDDLEWARE = [
@@ -60,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.locale.LocaleMiddleware",
 ]
 
 ROOT_URLCONF = 'miabuconfig.urls'
@@ -263,3 +270,26 @@ CLOUDINARY_STORAGE = {
 
 # Set the default storage backend to Cloudinary storage
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+X_FRAME_OPTIONS = "SAMEORIGIN"
+SILENCED_SYSTEM_CHECKS = ["security.W019"]
+
+# LANGUAGE_CODE = "fr"
+# USE_I18N = True
+
+ADMIN_SITE_HEADER = "Nouveau Nom du Site"
+
+ADMIN_SITE_TITLE = "Nouveau Titre du Site"
+
+# Nouveau titre pour la page d'accueil de l'interface d'administration
+ADMIN_INDEX_TITLE = "Bienvenue sur la Nouvelle Page d'Accueil"
+
+LANGUAGES = (
+    ("en", _("English")),
+    ("it", _("Italiano")),
+    ("fr", _("Français")),
+    # more than one language is expected here
+)
+
+LANGUAGE_CODE = "en"
+USE_I18N = True

@@ -4,11 +4,12 @@ import { getDetailEvaluation } from "@/app/api/assessment/route";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { convert } from "html-to-text";
+import Cookies from "js-cookie";
 
 import { setShouldRefresh } from "@/features/refresh/refreshSlice";
 import { downloadEvaluationWord } from "@/app/api/assessment/route";
+
 import Answer from "@/components/Answer";
-import Cookies from "js-cookie";
 import Loading from "@/components/Loading";
 
 const Page = ({ params }) => {
@@ -18,14 +19,14 @@ const Page = ({ params }) => {
 
   const shouldRefresh = useSelector((state) => state.refresh.shouldRefresh);
   const dispatch = useDispatch()
-  const [isLoading, setIsLoading] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
-    setIsLoading(true);
     getDetailEvaluation(params.id).then((response) => {  
       setEvaluationDetail(response)
+      setIsLoading(false);
     })
-    setIsLoading(false); 
   }, [])
 
   useEffect(() => {
@@ -52,7 +53,7 @@ const Page = ({ params }) => {
 
   return (
     <>
-    {isLoading ? <Loading /> : (
+    {!isLoading && evaluationDetail && (
       <main class="flex-1">
         <div class="py-8 xl:py-10">
           <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 xl:max-w-5xl xl:grid xl:grid-cols-3">
@@ -175,6 +176,11 @@ const Page = ({ params }) => {
         </div>
       </main>
     )}
+    {isLoading && 
+      <div className="mt-20">
+        <Loading />
+      </div>
+    }
   </>
   )
 }
