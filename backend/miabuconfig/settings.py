@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,13 +21,17 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'miabususu.pythonanywhere.com']
 # Application definition
 
 INSTALLED_APPS = [
+    # Interface
+    'admin_interface',
+    'colorfield',
+    # Interface
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
+    # 'django.contrib.sites',
     'rest_framework',
     'rest_framework_swagger',
     'rest_framework_simplejwt',
@@ -38,17 +43,18 @@ INSTALLED_APPS = [
     'corsheaders',
     # django-allauth
     'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.google',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.facebook',
+    # 'allauth.socialaccount.providers.google',
     # dj rest auth
     'rest_framework.authtoken',
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
+    # 'dj_rest_auth',
+    # 'dj_rest_auth.registration',
     # cloudinary
     'cloudinary_storage',
     'cloudinary',
+    
 ]
 
 MIDDLEWARE = [
@@ -60,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.locale.LocaleMiddleware",
 ]
 
 ROOT_URLCONF = 'miabuconfig.urls'
@@ -127,6 +134,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+TOKEN_MODEL = None
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -263,3 +271,15 @@ CLOUDINARY_STORAGE = {
 
 # Set the default storage backend to Cloudinary storage
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+X_FRAME_OPTIONS = "SAMEORIGIN"
+SILENCED_SYSTEM_CHECKS = ["security.W019"]
+
+LANGUAGES = (
+    ("en", _("English")),
+    ("fr", _("Français")),
+    # more than one language is expected here
+)
+
+LANGUAGE_CODE = "en"
+USE_I18N = True
