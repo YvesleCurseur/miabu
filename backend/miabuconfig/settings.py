@@ -258,16 +258,16 @@ cloudinary.config(
   api_secret = "NPLoUVdwHkpsN_nTwTLiukYFQ78",
   api_proxy = "http://proxy.server:3128"
 )
-# import cloudinary.uploader
-# import cloudinary.api
+import cloudinary.uploader
+import cloudinary.api
 
-# # Configure Cloudinary storage
-# CLOUDINARY_STORAGE = {
-#     'CLOUD_NAME': 'dvmkojfzr',
-#     'API_KEY': '344368124351159',
-#     'API_SECRET': 'NPLoUVdwHkpsN_nTwTLiukYFQ78',
-#     # Optionally, specify additional settings such as 'FOLDER', 'PREFIX', etc.
-# }
+# Configure Cloudinary storage
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dvmkojfzr',
+    'API_KEY': '344368124351159',
+    'API_SECRET': 'NPLoUVdwHkpsN_nTwTLiukYFQ78',
+    # Optionally, specify additional settings such as 'FOLDER', 'PREFIX', etc.
+}
 
 # Set the default storage backend to Cloudinary storage
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
