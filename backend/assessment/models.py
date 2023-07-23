@@ -7,8 +7,8 @@ from cloudinary_storage.storage import RawMediaCloudinaryStorage
 from assessment.utils import get_activity_image_path
 
 OPTIONS = (
-        ('draft', 'Draft'),
-        ('publish', 'Publish'),
+        ('draft', 'Brouillon'),
+        ('publish', 'Publier'),
     )
 
 # Models for establishment
@@ -27,6 +27,7 @@ class Establishment(models.Model):
         indexes = [
             models.Index(fields=['name']),
         ]
+        verbose_name = 'Etablissement'
 
 # Models for course
 class Course(models.Model):
@@ -42,6 +43,7 @@ class Course(models.Model):
         indexes = [
             models.Index(fields=['name']),
         ]
+        verbose_name = 'Cour'
 
 # Models for domain
 class Domain(models.Model):
@@ -54,6 +56,7 @@ class Domain(models.Model):
         indexes = [
             models.Index(fields=['name']),
         ]
+        verbose_name = 'Domaine'
 
 # Models for level
 class Level(models.Model):
@@ -66,32 +69,40 @@ class Level(models.Model):
         indexes = [
             models.Index(fields=['name']),
         ]
+        verbose_name = 'Niveau'
 
 class Image(models.Model):
-    image = models.ImageField(upload_to='images/', blank=True)
+    name = models.CharField(max_length=1000, verbose_name='Nom')  
+    image = models.ImageField(upload_to='images/', blank=True, verbose_name='Lien Image')
+
+    class Meta:
+        verbose_name = 'Image'
+
+    def __str__(self):
+        return self.name
 
 class Evaluation(models.Model):
     # Fields from Topic model
-    title = models.CharField(max_length=150)
-    content = models.TextField(null=True, blank=True)
+    title = models.CharField(max_length=150, verbose_name='Titre')
+    content = models.TextField(null=True, blank=True, verbose_name='Contenu')
     slug = models.SlugField(max_length=1000, unique_for_date='publish_at')
     publish_at = models.DateTimeField(default=timezone.now)
     create_at = models.DateTimeField(default=timezone.now)
     last_update_at = models.DateTimeField(default=timezone.now)
     delete_at = models.DateTimeField(null=True, blank=True)
     category = models.ForeignKey('forum.Category', on_delete=models.SET_NULL, null=True, blank=True)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='assessment_evaluations')
-    status = models.CharField(max_length=10, choices=OPTIONS, default='publish')
-    media = models.FileField(upload_to='raw/', blank=True, storage=RawMediaCloudinaryStorage())
-    images = models.ManyToManyField(Image, related_name='assessment_evaluations', blank=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='assessment_evaluations', verbose_name='Auteur')
+    status = models.CharField(max_length=10, choices=OPTIONS, default='publish', verbose_name='Statut')
+    media = models.FileField(upload_to='raw/', blank=True, storage=RawMediaCloudinaryStorage(), verbose_name='Media')
+    images = models.ManyToManyField(Image, related_name='assessment_evaluations', blank=True, verbose_name='Images')
 
     # Fields for assessment
     visits = models.PositiveIntegerField(default=0)
-    level = models.ForeignKey(Level, on_delete=models.CASCADE, related_name='assessment_evaluations', null=True)
-    domain = models.ForeignKey(Domain, on_delete=models.CASCADE, related_name='assessment_evaluations', null=True)
-    course = models.ForeignKey(Course, on_delete=models.SET_NULL, related_name='assessment_evaluations', null=True)
-    establishment = models.ForeignKey(Establishment, on_delete=models.SET_NULL, related_name='assessment_evaluations', null=True)
-    year = models.CharField(max_length=100, null=True, blank=True)
+    level = models.ForeignKey(Level, on_delete=models.CASCADE, related_name='assessment_evaluations', null=True, verbose_name='Niveau')
+    domain = models.ForeignKey(Domain, on_delete=models.CASCADE, related_name='assessment_evaluations', null=True, verbose_name='Domaine')
+    course = models.ForeignKey(Course, on_delete=models.SET_NULL, related_name='assessment_evaluations', null=True, verbose_name='Cours')
+    establishment = models.ForeignKey(Establishment, on_delete=models.SET_NULL, related_name='assessment_evaluations', null=True, verbose_name='Etablissement')
+    year = models.CharField(max_length=100, null=True, blank=True, verbose_name='Année-Académique')
     # answer = models.ManyToManyField(Answer, blank=True)
 
     def __str__(self):
@@ -112,6 +123,7 @@ class Evaluation(models.Model):
             models.Index(fields=['course']),
             models.Index(fields=['establishment']),
         ]
+        verbose_name = 'Epreuve'
 
 class Like(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

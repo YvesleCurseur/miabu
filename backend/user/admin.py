@@ -1,11 +1,13 @@
 from django.contrib import admin
 from .models import NewUser
+from django.contrib.auth.models import Group
+from django.contrib.auth.admin import UserAdmin
 
 from django.contrib.auth.admin import UserAdmin
 from django.forms import TextInput, Textarea, CharField
 from django import forms
 from django.db import models
-
+import django.apps
 class UserAdminConfig(UserAdmin):
     model = NewUser
     search_fields = ('email', 'username', 'first_name',)
@@ -14,7 +16,7 @@ class UserAdminConfig(UserAdmin):
     list_display = ('id', 'email', 'username', 'first_name',
                     'is_active', 'is_staff')
     fieldsets = (
-        (None, {'fields': ('email', 'username', 'first_name',)}),
+        (None, {'fields': ('email', 'username', 'first_name', 'groups')}),
         ('Permissions', {'fields': ('is_staff', 'is_active')}),
         ('Personal', {'fields': ('about',)}),
     )
@@ -24,8 +26,8 @@ class UserAdminConfig(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'username', 'first_name', 'password1', 'password2', 'is_active', 'is_staff', 'is_superuser')}
+            'fields': ('email', 'username', 'first_name', 'password1', 'password2', 'is_active', 'is_staff', 'is_superuser', 'groups')}
          ),
     )
-
-admin.site.register(NewUser, UserAdminConfig)
+admin.site.unregister(Group)
+# admin.site.register(NewUser, UserAdminConfig)

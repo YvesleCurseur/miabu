@@ -36,6 +36,7 @@ class EvaluationSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'content', 'author', 'status', 'year', 'establishment', 'level', 'course', 'domain', 'media', 'create_at', 'last_update_at']
 
     def create_evaluation_with_images(self, validated_data, images):
+        title = validated_data.get('title')
         level_data = validated_data.pop('level', None)
         course_data = validated_data.pop('course', None)
         domain_data = validated_data.pop('domain', None)
@@ -44,8 +45,7 @@ class EvaluationSerializer(serializers.ModelSerializer):
         evaluation = Evaluation.objects.create(**validated_data)
 
         for image in images:
-            image_instance = Image.objects.create(image=image)
-            print(image)
+            image_instance = Image.objects.create(name=title, image=image)
             evaluation.images.add(image_instance)
         
         if establishment_data:

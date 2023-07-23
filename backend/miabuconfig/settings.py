@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
+    # 'django.contrib.sites',
     'rest_framework',
     'rest_framework_swagger',
     'rest_framework_simplejwt',
@@ -43,14 +43,14 @@ INSTALLED_APPS = [
     'corsheaders',
     # django-allauth
     'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.google',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.facebook',
+    # 'allauth.socialaccount.providers.google',
     # dj rest auth
     'rest_framework.authtoken',
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
+    # 'dj_rest_auth',
+    # 'dj_rest_auth.registration',
     # cloudinary
     'cloudinary_storage',
     'cloudinary',
@@ -134,6 +134,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+TOKEN_MODEL = None
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -257,16 +258,16 @@ cloudinary.config(
   api_secret = "NPLoUVdwHkpsN_nTwTLiukYFQ78",
   api_proxy = "http://proxy.server:3128"
 )
-import cloudinary.uploader
-import cloudinary.api
+# import cloudinary.uploader
+# import cloudinary.api
 
-# Configure Cloudinary storage
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dvmkojfzr',
-    'API_KEY': '344368124351159',
-    'API_SECRET': 'NPLoUVdwHkpsN_nTwTLiukYFQ78',
-    # Optionally, specify additional settings such as 'FOLDER', 'PREFIX', etc.
-}
+# # Configure Cloudinary storage
+# CLOUDINARY_STORAGE = {
+#     'CLOUD_NAME': 'dvmkojfzr',
+#     'API_KEY': '344368124351159',
+#     'API_SECRET': 'NPLoUVdwHkpsN_nTwTLiukYFQ78',
+#     # Optionally, specify additional settings such as 'FOLDER', 'PREFIX', etc.
+# }
 
 # Set the default storage backend to Cloudinary storage
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
@@ -274,19 +275,8 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 X_FRAME_OPTIONS = "SAMEORIGIN"
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
 
-# LANGUAGE_CODE = "fr"
-# USE_I18N = True
-
-ADMIN_SITE_HEADER = "Nouveau Nom du Site"
-
-ADMIN_SITE_TITLE = "Nouveau Titre du Site"
-
-# Nouveau titre pour la page d'accueil de l'interface d'administration
-ADMIN_INDEX_TITLE = "Bienvenue sur la Nouvelle Page d'Accueil"
-
 LANGUAGES = (
     ("en", _("English")),
-    ("it", _("Italiano")),
     ("fr", _("Français")),
     # more than one language is expected here
 )
