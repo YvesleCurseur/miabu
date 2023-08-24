@@ -10,5 +10,6 @@ class EvaluationAdmin(admin.ModelAdmin):
 admin.site.register(Establishment)
 admin.site.register(Course)
 admin.site.register(Domain)
+admin.site.register(Level)
 admin.site.register(Evaluation, EvaluationAdmin)
 admin.site.register(Image)

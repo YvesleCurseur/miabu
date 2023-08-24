@@ -96,52 +96,36 @@ const ImageToText = (props) => {
 
   /* Image to text */
   const getTextFromImage = async () => {
-
+    // Vérifie s'il y a des fichiers à traiter
     if (files.length === 0) {
       setShowPopup(true);
       setError("Aucune image à transcrire");
       return;
     }
-
-    setIsLoading(true)
-
+    // Indique que le chargement est en cours
+    setIsLoading(true);
+    // Récupère le premier fichier de la liste
     const file = files[0];
-
-    const worker = await createWorker()
-    await worker.load()
-    await worker.loadLanguage('fra')
+    // Crée un worker pour le traitement de l'image
+    const worker = await createWorker();
+    await worker.load();
+    // Charge la langue française pour la reconnaissance de texte
+    await worker.loadLanguage('fra');
+    // Initialise le worker avec la langue française
     await worker.initialize('fra');
-
-    // await worker.setParameters({
-    //   tessedit_create_hocr: 1 
-    // });
-
+    // Utilise le worker pour reconnaître le texte dans l'image
     const { data: { text } } = await worker.recognize(file);
-    console.log(text)
-        
-    // const { data: { lines } } = await worker.recognize(file);
-
-    // let formattedText = '';
-  
-    // for (let i = 0; i < lines.length; i++) {
-    //   const line = lines[i];
-  
-    //   const indentation = line.bbox.x0; // Indentation relative par rapport à la position de l'image entière
-    //   const spaces = ' '.repeat(indentation); // Création d'une chaîne d'espaces correspondant à l'indentation
-  
-    //   formattedText += spaces + line.text + '\n'; // Ajout des espaces à chaque ligne de texte avec un retour à la ligne
-    // }
-  
+    console.log(text);
+    // Met à jour le résultat du texte
     setTextResult(text);
+    // Appelle la fonction fournie pour traiter le texte
     props.onImageFromText(text);
-    // if (files.length > 1) {
-    //   console.log(files)
-    //   props.onImageUsed(files)
-    // }
-    props.onImageUsed(file)
-    setIsLoading(false)
-
-    }
+    // Indique que le fichier image a été utilisé
+    props.onImageUsed(file);
+    // Termine le chargement
+    setIsLoading(false);
+  }
+  
 
     props.onImageUsed(files)
     props.onImageFromText(textResult)

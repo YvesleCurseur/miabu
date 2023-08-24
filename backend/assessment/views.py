@@ -83,29 +83,24 @@ class PDFDownloadView(GenericAPIView):
 
 class WordDownloadView(GenericAPIView):
     serializer_class = FileSerializer
-
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-
         text = serializer.validated_data.get('text')
         filename = serializer.validated_data.get('filename')
         print(text)
         print(filename)
-
         # Créer un fichier Word
         doc = Document()
-
         # Ajouter du contenu au fichier Word
         doc.add_paragraph(text)
-
         # Enregistrer le fichier Word dans un flux de données
         word_file = BytesIO()
         doc.save(word_file)
         word_file.seek(0)
-
         # Renvoyer le fichier Word en tant que réponse avec le nom de fichier dynamique
-        response = HttpResponse(word_file, content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+        response = HttpResponse(word_file, 
+        content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
         response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
         return response
 
