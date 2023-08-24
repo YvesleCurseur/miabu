@@ -32,7 +32,7 @@ class Establishment(models.Model):
 # Models for course
 class Course(models.Model):
     name = models.CharField(max_length=100)
-    establishment = models.ForeignKey(Establishment, on_delete=models.CASCADE)
+    establishment = models.ForeignKey(Establishment, on_delete=models.SET_NULL, null=True, blank=True)
     level = models.ForeignKey('Level', on_delete=models.SET_NULL, null=True, blank=True)
     domain = models.ForeignKey('Domain', on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -80,6 +80,13 @@ class Image(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Session(models.Model):
+
+    session_type = models.CharField(max_length=1000, verbose_name='Session')
+    def __str__(self):
+        return self.session_type
+
 
 class Evaluation(models.Model):
     # Fields from Topic model
@@ -101,6 +108,7 @@ class Evaluation(models.Model):
     level = models.ForeignKey(Level, on_delete=models.CASCADE, related_name='assessment_evaluations', null=True, verbose_name='Niveau')
     domain = models.ForeignKey(Domain, on_delete=models.CASCADE, related_name='assessment_evaluations', null=True, verbose_name='Domaine')
     course = models.ForeignKey(Course, on_delete=models.SET_NULL, related_name='assessment_evaluations', null=True, verbose_name='Cours')
+    session = models.ForeignKey(Session, on_delete=models.SET_NULL, related_name='assessment_evaluations', null=True, verbose_name='Session')
     establishment = models.ForeignKey(Establishment, on_delete=models.SET_NULL, related_name='assessment_evaluations', null=True, verbose_name='Etablissement')
     year = models.CharField(max_length=100, null=True, blank=True, verbose_name='Année-Académique')
     # answer = models.ManyToManyField(Answer, blank=True)

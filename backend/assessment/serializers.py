@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from assessment.models import Evaluation, Establishment, Course, Domain, Level, Like, Image
+from assessment.models import Evaluation, Establishment, Course, Domain, Level, Like, Image, Session
 from user.serializers import UserDetailSerializer
 from forum.serializers import AnswerSerializer, AnswerDetailSerializer
 import cloudinary.uploader
@@ -25,11 +25,16 @@ class CourseSerializer(serializers.ModelSerializer):
         model = Course
         fields = ['name']
 
+class SessionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Session
+        fields = ['session_type']
+
 class EvaluationSerializer(serializers.ModelSerializer):
     level = LevelSerializer(required=False, allow_null=True)
     domain = DomainSerializer(required=False, allow_null=True)
     course = CourseSerializer(required=False, allow_null=True)
-    establishment = EstablishmentSerializer(required=False, allow_null=True)
+    # establishment = EstablishmentSerializer(required=False, allow_null=True)
 
     class Meta:
         model = Evaluation
@@ -40,7 +45,7 @@ class EvaluationSerializer(serializers.ModelSerializer):
         level_data = validated_data.pop('level', None)
         course_data = validated_data.pop('course', None)
         domain_data = validated_data.pop('domain', None)
-        establishment_data = validated_data.pop('establishment', None)
+        # establishment_data = validated_data.pop('establishment', None)
 
         evaluation = Evaluation.objects.create(**validated_data)
 
@@ -48,9 +53,9 @@ class EvaluationSerializer(serializers.ModelSerializer):
             image_instance = Image.objects.create(name=title, image=image)
             evaluation.images.add(image_instance)
         
-        if establishment_data:
-            establishment = Establishment.objects.create(**establishment_data)
-            evaluation.establishment = establishment
+        # if establishment_data:
+        #     establishment = Establishment.objects.create(**establishment_data)
+        #     evaluation.establishment = establishment
 
         if level_data:
             level = Level.objects.create(**level_data)
@@ -76,11 +81,11 @@ class EvaluationDetailSerializer(serializers.ModelSerializer):
     domain = DomainSerializer(required=False, allow_null=True)
     level = LevelSerializer(required=False, allow_null=True)
     establishment = EstablishmentSerializer(required=False, allow_null=True)
-     
+    session = SessionSerializer(required=False, allow_null=True)
 
     class Meta:
         model = Evaluation
-        fields = ['id', 'title', 'content', 'author', 'status', 'year', 'establishment', 'level', 'course', 'domain', 'media', 'images', 'create_at', 'last_update_at', 'answers', 'visits']
+        fields = ['id', 'title', 'content', 'author', 'status', 'year', 'establishment', 'level', 'course', 'domain', 'media', 'images', 'create_at', 'last_update_at', 'session', 'answers', 'visits']
 
 class FileSerializer(serializers.Serializer):
     text = serializers.CharField(required=False, allow_null=True)

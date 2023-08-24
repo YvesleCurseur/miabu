@@ -22,11 +22,16 @@ export default function Home() {
       {/* <Sidebar /> */}
       <section className="w-full flex-center flex-col">
         <h1 className="head_text text-center">
-          Partager vos épreuves.
+          Partagez vos anciens 
           <br className="max-md:hidden"/>
           {/* <span className="orange_gradient">AI</span> */}
         </h1>
-        <p className="desc text-center">Vous avez la possibilié de partager et de télécharger vos épreuves</p>
+        <h1 className="head_text text-center">
+          sujets d'examens nationaux
+          <br className="max-md:hidden"/>
+          {/* <span className="orange_gradient">AI</span> */}
+        </h1>
+        <p className="desc text-center">Vous avez la possibilié de partager, rechercher et de télécharger vos anciens sujets d'examens nationaux Togolais</p>
 
         <Feed />
         
