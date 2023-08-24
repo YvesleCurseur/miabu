@@ -125,6 +125,9 @@ const CreateTopic = () => {
             <br/>
             <br/>
             Lors de cette étape, veuillez choisir un titre clair et informatif pour votre épreuve, qui sera affiché aux autres utilisateurs. Ce titre aidera les participants potentiels à comprendre de quoi traite l'épreuve. Choisissez un titre attrayant et concis pour susciter l'intérêt des participants !
+            <br/>
+            <br/>
+            <strong>Ex: Bac 2015 Philosophie Série A4, D, C Session (Normale ou Malade)</strong> 
         </p>
 
         <InputField

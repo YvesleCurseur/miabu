@@ -16,6 +16,8 @@ from rest_framework import status
 from rest_framework.generics import DestroyAPIView
 from rest_framework.response import Response
 from django.db.models import Q  
+from django.db import transaction
+
 from assessment.models import Evaluation, Like
 from assessment.serializers import EvaluationSerializer, EvaluationDetailSerializer, FileSerializer, LikeSerializer
 
@@ -24,7 +26,7 @@ from user.models import NewUser
 class CreateEvaluationView(generics.CreateAPIView):
 
     serializer_class = EvaluationSerializer
-
+    @transaction.atomic
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         images = request.FILES.getlist('images')
@@ -187,22 +189,25 @@ class LikeDestroyAPIView(DestroyAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class EvaluationSearchView(generics.ListAPIView):
-    queryset = Evaluation.objects.filter(status='publish').order_by('-create_at')
     serializer_class = EvaluationDetailSerializer
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = Evaluation.objects.filter(status='publish').order_by('-create_at')
         search_query = self.request.query_params.get('search', None)
 
         if search_query:
-            queryset = queryset.filter(
-                Q(slug__icontains=search_query) |
-                Q(title__icontains=search_query) |
-                Q(level__name__icontains=search_query) |
-                Q(domain__name__icontains=search_query) |
-                Q(course__name__icontains=search_query) |
-                Q(establishment__name__icontains=search_query) |
-                Q(content__icontains=search_query)
-            )
+            query_parts = search_query.split()
+
+            query = Q()
+            for part in query_parts:
+                query |= Q(slug__icontains=part) | \
+                         Q(title__icontains=part) | \
+                         Q(level__name__icontains=part) | \
+                         Q(domain__name__icontains=part) | \
+                         Q(course__name__icontains=part) | \
+                         Q(establishment__name__icontains=part) | \
+                         Q(content__icontains=part)
+
+            queryset = queryset.filter(query)
 
         return queryset

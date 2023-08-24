@@ -62,12 +62,20 @@ const Page = ({ params }) => {
                 <div>
                   <h1 class="text-2xl font-bold text-gray-900">{evaluationDetail.title}</h1>
                   <p class="mt-2 text-sm text-gray-500">
-                      Module{' '}
+                      Cours{' '}
                     <a href="#" class="font-medium text-gray-900">{evaluationDetail && evaluationDetail.course ? evaluationDetail.course.name : ""}</a>
                   </p>
-                  <p class="mt-2 text-sm text-gray-500">
+                  {/* <p class="mt-2 text-sm text-gray-500">
                     Institut{' '}
                     <a href="#" class="font-medium text-gray-900">{evaluationDetail && evaluationDetail.establishment ? evaluationDetail.establishment.name : ""}</a>
+                  </p> */}
+                  <p class="mt-2 text-sm text-gray-500">
+                    Option{' '}
+                    <a href="#" class="font-medium text-gray-900">{evaluationDetail && evaluationDetail.domain ? evaluationDetail.domain.name : ""}</a>
+                  </p>
+                  <p class="mt-2 text-sm text-gray-500">
+                    Session{' '}
+                    <a href="#" class="font-medium text-gray-900">{evaluationDetail && evaluationDetail.session ? evaluationDetail.session.session_type : ""}</a>
                   </p>
                   <p class="mt-2 text-sm text-gray-500">
                     Niveau{' '}
@@ -76,10 +84,6 @@ const Page = ({ params }) => {
                   <p class="mt-2 text-sm text-gray-500">
                     Année-Académique{' '}
                     <a href="#" class="font-medium text-gray-900">{evaluationDetail && evaluationDetail.year ? evaluationDetail.year : ""}</a>
-                  </p>
-                  <p class="mt-2 text-sm text-gray-500">
-                    Filière{' '}
-                    <a href="#" class="font-medium text-gray-900">{evaluationDetail && evaluationDetail.domain ? evaluationDetail.domain.name : ""}</a>
                   </p>
                 </div>
                 <div class="mt-4 flex space-x-3 md:mt-0">
