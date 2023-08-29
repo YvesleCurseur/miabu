@@ -20,7 +20,7 @@ const SearchBar = ({ onSearch }) => {
     <form className='relative w-full flex-center mt-10'>
         <input
             type='text'
-            placeholder='Recherchez une épreuve...'
+            placeholder='Recherchez un sujet...'
             required
             className='search_input peer'
             value={searchQuery}

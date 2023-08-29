@@ -13,7 +13,7 @@ const Rootlayout = ({ children }) => {
   return (
       <Provider store={store}>
         <html lang="en">
-          <MetaTags title="MiabuSUSU" description="Un endroit ou on partage ses épreuves" />
+          <MetaTags title="MiabuSUSU" description="Un endroit ou on partage ses anciens sujets d'examens nationaux" />
             <body>    
               <ProviderSession>
                 <main className='app'>

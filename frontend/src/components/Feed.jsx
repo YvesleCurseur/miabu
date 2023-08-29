@@ -13,7 +13,7 @@ const EvaluationList = ({ data, userId, likedByUserData }) => {
   if (data.length === 0) {
     return (
       <div className="mt-10">
-        <p className="desc text-center" >Aucune épreuve trouvée.</p>
+        <p className="desc text-center" >Aucun sujet trouvée.</p>
       </div>
       
     );
@@ -91,7 +91,7 @@ const Feed = () => {
       setList(response.results);
       setIsLoading(false);
     } catch (error) {
-      console.error('Une erreur s\'est produite lors de la récupération des épreuves:', error);
+      console.error('Une erreur s\'est produite lors de la récupération des sujets:', error);
     }
   };
   

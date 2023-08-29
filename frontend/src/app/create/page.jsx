@@ -114,17 +114,17 @@ const CreateTopic = () => {
 <>
   <MetaTags 
     title="Création | MiabuSUSU" 
-    description="Partagez une épreuve" 
+    description="Partagez un sujet d'examen" 
   />
   <section className='w-full max-w-full flex-start flex-col'>
     <div className='mt-10 w-full max-w-2xl flex flex-col gap-7'>
       <form onSubmit={handleSubmit}>
         {/* Champ de saisie pour le titre */}
         <p className='border p-4 mb-4 border-gray-200 hover:bg-white cursor-help'>
-            <u><strong>Étape 1</strong></u>: Entrez un titre pour votre épreuve
+            <u><strong>Étape 1</strong></u>: Entrez un titre pour votre sujet d'examen
             <br/>
             <br/>
-            Lors de cette étape, veuillez choisir un titre clair et informatif pour votre épreuve, qui sera affiché aux autres utilisateurs. Ce titre aidera les participants potentiels à comprendre de quoi traite l'épreuve. Choisissez un titre attrayant et concis pour susciter l'intérêt des participants !
+            Lors de cette étape, veuillez choisir un titre clair et informatif pour votre sujet, qui sera affiché aux autres utilisateurs. Ce titre aidera les participants potentiels à comprendre de quoi traite le sujet. Choisissez un titre attrayant et concis pour susciter l'intérêt des participants !
             <br/>
             <br/>
             <strong>Ex: Bac 2015 Philosophie Série A4, D, C Session (Normale ou Malade)</strong> 
@@ -144,7 +144,7 @@ const CreateTopic = () => {
           <PopUp
             type={error ? "error" : ""}
             title={error ? "Erreur |" : ""}
-            message={error ? "Erreur du téléchargement de l\'épreuve ! Veuillez vérifier si vous avez inscrit un titre, une image ou un fichier correct pour l'enregistrement." : ""}
+            message={error ? "Erreur du téléchargement du sujet d'examen ! Veuillez vérifier si vous avez inscrit un titre, une image ou un fichier correct pour l'enregistrement." : ""}
             onClose={() => setShowPopup(false)}
             duration={5000} // Le popup sera affiché pendant 4 secondes
           />

@@ -41,6 +41,10 @@ CREATE TABLE IF NOT EXISTS "assessment_level"(
   "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
   "name" varchar(100) NOT NULL
 );
+CREATE TABLE IF NOT EXISTS "assessment_session"(
+  "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "session_type" varchar(100) NOT NULL
+);
 CREATE TABLE IF NOT EXISTS "assessment_course"(
   "id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
   "name" varchar(100) NOT NULL,
@@ -58,3 +62,4 @@ CREATE TABLE IF NOT EXISTS "forum_comment"(
   "anwser_id" bigint NOT NULL REFERENCES "forum_answer"("id") DEFERRABLE INITIALLY DEFERRED,
   "author_id" bigint NOT NULL REFERENCES "user_newuser"("id") DEFERRABLE INITIALLY DEFERRED
 );
+

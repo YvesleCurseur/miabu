@@ -80,7 +80,7 @@ const Navbar = () => {
             {session?.user ? (
                 <div className="flex gap-3 md:gap-5">
                 <Link href="/create" className="px-3 py-2 text-sm text-white bg-rose-500 hover:bg-rose-600">
-                    Postez une épreuve
+                    Postez un sujet
                 </Link>
                 <button type="button" onClick={() => handleSignOut()} className="text-sm px-3 py-2 text-blue-500 bg-gray-200 hover:bg-gray-300">
                     Déconnexion
