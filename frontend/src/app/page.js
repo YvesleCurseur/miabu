@@ -32,7 +32,7 @@ export default function Home() {
           {/* <span className="orange_gradient">AI</span> */}
         </h1>
         <p className="desc text-center">Vous avez la possibilié de partager, rechercher et de télécharger vos anciens sujets d'examens nationaux Togolais</p>
-
+        
         <Feed />
         
       </section>
