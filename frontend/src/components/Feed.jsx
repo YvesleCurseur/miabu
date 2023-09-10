@@ -105,7 +105,7 @@ const Feed = () => {
   return (
     <>
       <br/>
-      <p className="text-center text-xm text-gray-600">Exemple de recherche: "Bac 2015 Philosophie Série A4, D, C Session Normale"</p>
+      <p className="text-center text-xm text-gray-600">Exemple de recherche: "Bac 2015 Dessin Série A4, D, C Session Normale"</p>
       <SearchBar onSearch={handleSearch} />
       {isLoading ? (
         <div className="mt-10">
